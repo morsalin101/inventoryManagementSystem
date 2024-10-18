@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+  <div th:fragment="script">
+    
+     <!-- Include your JS scripts -->
+     <script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+     <script th:src="@{/js/jquery.ui.touch-punch-improved.js}"></script>
+     <script th:src="@{/js/jquery-ui.min.js}"></script>
+     <!-- Bootstrap tether Core JavaScript -->
+     <script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+     <!-- slimscrollbar scrollbar JavaScript -->
+     <script th:src="@{/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+     <script th:src="@{/extra-libs/sparkline/sparkline.js}"></script>
+     <!--Wave Effects -->
+     <script th:src="@{/js/waves.js}"></script>
+     <!--Menu sidebar -->
+     <script th:src="@{/js/sidebarmenu.js}"></script>
+     <!--Custom JavaScript -->
+     <script th:src="@{/js/custom.min.js}"></script>
+     <!-- this page js -->
+     <script th:src="@{/libs/moment/min/moment.min.js}"></script>
+     <script th:src="@{/libs/fullcalendar/dist/fullcalendar.min.js}"></script>
+     <script th:src="@{/js/pages/calendar/cal-init.js}"></script>
+  </div>
+
+</body>
+</html>
