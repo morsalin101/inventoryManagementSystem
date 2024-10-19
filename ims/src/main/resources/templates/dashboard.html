@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Dashboard Template</title>
+    <title th:text="@{title}"></title>
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
     <link th:href="@{/libs/fullcalendar/dist/fullcalendar.min.css}" rel="stylesheet" />
     <link th:href="@{/extra-libs/calendar/calendar.css}" rel="stylesheet" />
@@ -26,15 +26,7 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-12 d-flex no-block align-items-center">
-                    <h4 class="page-title">Dashboard-2</h4>
-                    <div class="ms-auto text-end">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Library</li>
-                            </ol>
-                        </nav>
-                    </div>
+                    <h4 class="page-title" th:text="${pageTitle}"></h4>
                 </div>
             </div>
         </div>

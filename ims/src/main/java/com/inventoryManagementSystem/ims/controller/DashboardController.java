@@ -6,12 +6,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 
 @Controller
 public class DashboardController {
 
+    @GetMapping("/")
+    public void rootRedirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/login");
+    }
+
+
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, HttpServletResponse response) throws IOException {
+    public String dashboard(HttpSession session, HttpServletResponse response,Model model) throws IOException {
+        model.addAttribute("title", "Dashboard");
+        model.addAttribute("pageTitle", "Dashboard");
         // Check if user exists in the session
         User user = (User) session.getAttribute("user");
         

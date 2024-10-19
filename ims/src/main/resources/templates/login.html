@@ -33,6 +33,7 @@
             <div class="auth-box bg-dark border-top border-secondary p-4">
                 <div id="loginform">
                     <div class="text-center pt-3 pb-3">
+                        <span id="redirectingMessage" class="text-success" style="display: none;">Redirecting...</span>
                         <span class="db"><img th:src="@{/images/logo.png}" alt="logo" /></span>
                     </div>
                     <!-- Form -->
@@ -53,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row border-top border-secondary">
+                        <div class="row border-top border-secondary"></div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <div class="pt-3">
@@ -64,23 +65,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap Modal for Notification -->
-    <div class="modal fade" id="loginSuccessModal" tabindex="-1" role="dialog" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginSuccessModalLabel">Success</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Login successful! Redirecting to the dashboard...
                 </div>
             </div>
         </div>
@@ -120,8 +104,8 @@
                 data: JSON.stringify(loginData),
                 success: function(response) {
                     if (response.status === 'success') {
-                        // Show modal on success
-                        $('#loginSuccessModal').modal('show');
+                        // Show redirecting message on success
+                        $('#redirectingMessage').show();
 
                         // Redirect after 3 seconds
                         setTimeout(function() {
