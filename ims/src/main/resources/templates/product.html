@@ -144,135 +144,193 @@
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            // Function to show the success alert
-            function showAlert(message) {
-                $('#success-alert-message').text(message);  // Set the alert message
-                $('#success-alert').addClass('show');       // Show the alert by adding the 'show' class
-
-                // Automatically hide the alert after 3 seconds
-                setTimeout(function() {
-                    $('#success-alert').removeClass('show');  // Hide the alert
-                }, 3000);
-            }
-
-            // Fetch categories and populate the table
-            function fetchCategories() {
-                $.ajax({
-                    url: '/get-category',  // Change this URL to your backend endpoint
-                    type: 'GET',
-                    success: function(response) {
-                        var categoryTableBody = $('#category-table-body');
-                        categoryTableBody.empty(); // Clear existing rows
+   <script>
+    $(document).ready(function () {
+        // Object to store categories for easy lookup
+        var categoriesMap = {};
     
-                        response.forEach(function(category) {
-                            var row = '<tr>' +
-                                '<th scope="row">' + category.c_id + '</th>' +
-                                '<td>' + category.c_name + '</td>' +
-                                '<td>' +
-                                    '<button type="button" class="btn btn-primary btn-sm text-white edit-category" data-id="' + category.c_id + '" data-name="' + category.c_name + '">Edit</button>' +
-                                    ' <button type="button" class="btn btn-danger btn-sm text-white delete-category" data-id="' + category.c_id + '">Delete</button>' +
-                                '</td>' +
-                                '</tr>';
-                            categoryTableBody.append(row);
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Error fetching categories');
+        // Function to show success alert
+        function showAlert(message) {
+            $('#success-alert-message').text(message);
+            $('#success-alert').addClass('show');
+            setTimeout(function () {
+                $('#success-alert').removeClass('show');
+            }, 3000);
+        }
+    
+        // Function to populate the category dropdown from /get-category route
+        function populateCategories() {
+            $.ajax({
+                url: '/get-category',
+                type: 'GET',
+                success: function (response) {
+                    console.log('Categories fetched:', response); // Debugging line
+                    var categoryDropdown = $('select[name="category-id"]');
+                    categoryDropdown.empty(); // Clear existing options
+    
+                    if (response.length === 0) {
+                        console.warn('No categories found'); // Warn if no categories
                     }
-                });
-            }
     
-            // Initial fetch of categories
-            fetchCategories();
-    
-            // Save category button click event
-            $('.save-category').on('click', function(e) {
-                e.preventDefault();
-                
-                var categoryName = $('input[name="category-name"]').val();
-                
-                if (categoryName === "") {
-                    alert("Category name cannot be empty");
-                    return;
+                    response.forEach(function (category) {
+                        // Store category name in the map
+                        categoriesMap[category.c_id] = category.c_name; // c_id maps to c_name
+                        var option = $('<option></option>').attr('value', category.c_id).text(category.c_name);
+                        categoryDropdown.append(option);
+                    });
+                },
+                error: function (xhr) {
+                    console.error("Error fetching categories: ", xhr.responseText);
+                    alert('Error fetching categories: ' + xhr.responseText);
                 }
+            });
+        }
     
+        // Function to fetch and display products in the table
+        function fetchProducts() {
+            $.ajax({
+                url: '/products/get', // Update to match the new endpoint
+                type: 'GET',
+                success: function (response) {
+                    var productTableBody = $('#product-table-body');
+                    productTableBody.empty(); // Clear the table
+    
+                    response.forEach(function (product) {
+                        // Assuming product.category contains the category ID
+                        var categoryName = categoriesMap[product.category] || 'Unknown'; // Get category name using the product.category ID
+    
+                        var row = '<tr>' +
+                            '<td>' + product.p_id + '</td>' +
+                            '<td>' + product.p_name + '</td>' +
+                            '<td>' + product.price + '</td>' +
+                            '<td>' + product.quantity + '</td>' +
+                            '<td><img src="data:image/jpeg;base64,' + product.image + '" width="50" height="50" alt="Product Image"></td>' +
+                            '<td>' + categoryName + '</td>' + // Use the category name
+                            '<td>' +
+                                '<button type="button" class="btn btn-primary btn-sm edit-product" data-id="' + product.p_id + '">Edit</button>' +
+                                ' <button type="button" class="btn btn-danger btn-sm delete-product" data-id="' + product.p_id + '">Delete</button>' +
+                            '</td>' +
+                            '</tr>';
+                        productTableBody.append(row);
+                    });
+                },
+                error: function () {
+                    alert('Error fetching products');
+                }
+            });
+        }
+    
+        // Call the populate categories and fetch products when the page loads
+        populateCategories();
+        fetchProducts();
+    
+        // Save new product or update existing product
+        $('.save-product').on('click', function (e) {
+            e.preventDefault();
+    
+            var productId = $(this).data('id'); // If updating, productId will be present
+            var productName = $('input[name="product-name"]').val();
+            var price = $('input[name="price"]').val();
+            var quantity = $('input[name="quantity"]').val();
+            var categoryId = $('select[name="category-id"]').val();
+            var formData = new FormData();
+    
+            // Create a product object
+            var product = {
+                p_name: productName,
+                price: price,
+                quantity: quantity,
+                category: categoryId // Ensure this matches your backend expected format
+            };
+    
+            // Append product object as JSON string
+            formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
+            var imageFile = $('input[name="product-image"]')[0].files[0];
+            if (imageFile) {
+                formData.append('image', imageFile); // Only append if there is an image
+            }
+    
+            var ajaxUrl = '/products/save'; // Default for adding
+            var ajaxType = 'POST';
+    
+            if (productId) {
+                ajaxUrl = '/products/update/' + productId; // Updated to reflect the new endpoint
+                ajaxType = 'PUT';
+            }
+    
+            $('.save-product').prop('disabled', true); // Disable save button
+    
+            $.ajax({
+                url: ajaxUrl,
+                type: ajaxType,
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function () {
+                    showAlert('Product saved successfully!');
+                    $('#add-new-event').modal('hide');
+                    $('form')[0].reset(); // Reset form
+                    fetchProducts();
+                },
+                complete: function () {
+                    $('.save-product').prop('disabled', false); // Re-enable button
+                },
+                error: function () {
+                    alert('Error saving product');
+                }
+            });
+        });
+    
+        // Handle Edit Product button click
+        $(document).on('click', '.edit-product', function () {
+            var productId = $(this).data('id');
+    
+            // Fetch the product data for the selected ID and populate the form
+            $.ajax({
+                url: '/products/get/' + productId, // Adjusted to match your API
+                type: 'GET',
+                success: function (product) {
+                    if (product) {
+                        $('input[name="product-name"]').val(product.p_name);
+                        $('input[name="price"]').val(product.price);
+                        $('input[name="quantity"]').val(product.quantity);
+                        $('select[name="category-id"]').val(product.category); // Assuming product.category holds the category ID
+                        $('.save-product').data('id', product.p_id); // Store the product ID in the save button
+                        $('#add-new-event').modal('show');
+                    } else {
+                        alert('Product not found');
+                    }
+                },
+                error: function () {
+                    alert('Error fetching product');
+                }
+            });
+        });
+    
+        // Handle Delete Product button click
+        $(document).on('click', '.delete-product', function () {
+            var productId = $(this).data('id');
+            $('#delete-confirmation-modal').modal('show');
+    
+            $('#confirm-delete-btn').off('click').on('click', function () {
                 $.ajax({
-                    url: '/save-category',  // Change this URL to your backend endpoint
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        c_name: categoryName
-                    }),
-                    success: function(response) {
-                        showAlert('Category saved successfully!');  // Show success alert
-                        fetchCategories();
+                    url: '/products/delete/' + productId, // Adjusted to match your API
+                    type: 'DELETE',
+                    success: function () {
+                        showAlert('Product deleted successfully!');
+                        $('#delete-confirmation-modal').modal('hide');
+                        fetchProducts();
                     },
-                    error: function(xhr, status, error) {
-                        alert('Error saving category');
+                    error: function () {
+                        alert('Error deleting product');
                     }
-                });
-            });
-    
-            // Handle edit category button click
-            $(document).on('click', '.edit-category', function() {
-                var categoryId = $(this).data('id');
-                var categoryName = $(this).data('name');
-    
-                $('input[name="category-name"]').val(categoryName);
-    
-                $('#add-new-event').modal('show');
-                $('.save-category').off('click').on('click', function() {
-                    var updatedCategoryName = $('input[name="category-name"]').val();
-    
-                    if (updatedCategoryName === "") {
-                        alert("Category name cannot be empty");
-                        return;
-                    }
-    
-                    $.ajax({
-                        url: '/update-category/' + categoryId,  // Change this URL to your backend endpoint
-                        type: 'PUT',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            c_name: updatedCategoryName
-                        }),
-                        success: function(response) {
-                            showAlert('Category updated successfully!');  // Show success alert
-                            $('#add-new-event').modal('hide');
-                            fetchCategories();
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error updating category');
-                        }
-                    });
-                });
-            });
-    
-            // Handle delete category button click
-            $(document).on('click', '.delete-category', function() {
-                var deleteCategoryId = $(this).data('id');
-    
-                $('#delete-confirmation-modal').modal('show');
-    
-                $('#confirm-delete-btn').on('click', function() {
-                    $.ajax({
-                        url: '/delete-category/' + deleteCategoryId,  // Change this URL to your backend endpoint
-                        type: 'DELETE',
-                        success: function(response) {
-                            showAlert('Category deleted successfully!');  // Show success alert
-                            $('#delete-confirmation-modal').modal('hide');
-                            fetchCategories();
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error deleting category');
-                        }
-                    });
                 });
             });
         });
+    });
     </script>
     
+    
+
 </body>
 </html>
