@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,18 +9,14 @@
     <link th:href="@{/libs/fullcalendar/dist/fullcalendar.min.css}" rel="stylesheet" />
     <link th:href="@{/extra-libs/calendar/calendar.css}" rel="stylesheet" />
     <link th:href="@{/css/style.min.css}" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
 </head>
 <body>
 
-    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
-    data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
-   
+<div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+     data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
 
     <div th:replace="header :: header"></div>
 
-  
     <div class="page-wrapper">
         <div class="page-breadcrumb">
             <div class="row">
@@ -35,87 +31,56 @@
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
+
         <div class="container-fluid">
             <div id="success-alert" class="alert alert-success alert-dismissible fade" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
                 <span id="success-alert-message">A simple success alert—check it out!</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
-            <!-- ============================================================== -->
+
             <!-- Start Page Content -->
-            <!-- ============================================================== -->
             <div class="row">
                 <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-0">Category Table</h5>
-                            </div>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Category ID</th>
-                                        <th scope="col">Category Name</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="category-table-body">
-                                    <!-- Categories will be dynamically inserted here -->
-                                </tbody>
-                            </table>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-0">Category Table</h5>
                         </div>
-                </div>             
-            </div>
-             
-               <!-- BEGIN MODAL -->
-               <div class="modal none-border" id="my-event">
-                <div class="modal-dialog">
-                    <div class="modal-content"></div>
-                        <div class="modal-header"></div>
-                            <h4 class="modal-title"><strong>Add Event</strong></h4>
-                            <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary waves-effect"
-                                data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success save-event waves-effect waves-light">Create
-                                event</button>
-                            <button type="button" class="btn btn-danger delete-event waves-effect waves-light"
-                                data-dismiss="modal">Delete</button>
-                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Category ID</th>
+                                <th scope="col">Category Name</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="category-table-body">
+                            <!-- Categories will be dynamically inserted here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <!-- Modal Add Category -->
+
+            <!-- Modal Add/Edit Category -->
             <div class="modal fade none-border" id="add-new-event">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title"><strong>Add</strong> a category</h4>
-                            <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
                             <form>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label class="control-label">Category Name</label>
-                                        <input class="form-control form-white" placeholder="Enter name" type="text"
-                                            name="category-name" />
+                                        <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name" />
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger waves-effect waves-light save-category"
-                                data-dismiss="modal">Save</button>
-                            <button type="button" class="btn btn-secondary waves-effect"
-                                data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger waves-effect waves-light save-category">Save</button>
+                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -142,45 +107,36 @@
                 </div>
             </div>
 
-
-            <!-- END MODAL -->
-
-            <!-- ============================================================== -->
-            <!-- End PAge Content -->
         </div>
-        <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <div th:replace="footer :: footer">
     </div>
 
-    </div>
-   
-   
+    <div th:replace="footer :: footer"></div>
 
-    <div th:replace="script::script"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Function to show the success alert
-            function showAlert(message) {
-                $('#success-alert-message').text(message);  // Set the alert message
-                $('#success-alert').addClass('show');       // Show the alert by adding the 'show' class
+            var isEditing = false;  // Track if it's an edit operation
+            var editingCategoryId = null;  // Track the category ID being edited
 
-                // Automatically hide the alert after 3 seconds
+            // Function to show success alert
+            function showAlert(message) {
+                $('#success-alert-message').text(message);
+                $('#success-alert').addClass('show');
                 setTimeout(function() {
-                    $('#success-alert').removeClass('show');  // Hide the alert
+                    $('#success-alert').removeClass('show');
                 }, 3000);
             }
 
             // Fetch categories and populate the table
             function fetchCategories() {
                 $.ajax({
-                    url: '/get-category',  // Change this URL to your backend endpoint
+                    url: '/get-category',  // Adjust the URL for your backend
                     type: 'GET',
                     success: function(response) {
                         var categoryTableBody = $('#category-table-body');
                         categoryTableBody.empty(); // Clear existing rows
-    
+
                         response.forEach(function(category) {
                             var row = '<tr>' +
                                 '<th scope="row">' + category.c_id + '</th>' +
@@ -188,7 +144,7 @@
                                 '<td>' +
                                     '<button type="button" class="btn btn-primary btn-sm text-white edit-category" data-id="' + category.c_id + '" data-name="' + category.c_name + '">Edit</button>' +
                                     ' <button type="button" class="btn btn-danger btn-sm text-white delete-category" data-id="' + category.c_id + '">Delete</button>' +
-                                '</td>' +
+                                    '</td>' +
                                 '</tr>';
                             categoryTableBody.append(row);
                         });
@@ -198,63 +154,35 @@
                     }
                 });
             }
-    
+
             // Initial fetch of categories
             fetchCategories();
-    
-            // Save category button click event
-            $('.save-category').on('click', function(e) {
-                e.preventDefault();
-                
+
+            // Reset the modal for adding a new category
+            $('#add-new-event').on('show.bs.modal', function() {
+                $('input[name="category-name"]').val('');  // Clear the input field
+                isEditing = false;  // Reset to add mode
+                editingCategoryId = null;  // Clear editing ID
+            });
+
+            // Save category for both adding and editing
+            $('.save-category').on('click', function() {
                 var categoryName = $('input[name="category-name"]').val();
-                
+
                 if (categoryName === "") {
                     alert("Category name cannot be empty");
                     return;
                 }
-    
-                $.ajax({
-                    url: '/save-category',  // Change this URL to your backend endpoint
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        c_name: categoryName
-                    }),
-                    success: function(response) {
-                        showAlert('Category saved successfully!');  // Show success alert
-                        fetchCategories();
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Error saving category');
-                    }
-                });
-            });
-    
-            // Handle edit category button click
-            $(document).on('click', '.edit-category', function() {
-                var categoryId = $(this).data('id');
-                var categoryName = $(this).data('name');
-    
-                $('input[name="category-name"]').val(categoryName);
-    
-                $('#add-new-event').modal('show');
-                $('.save-category').off('click').on('click', function() {
-                    var updatedCategoryName = $('input[name="category-name"]').val();
-    
-                    if (updatedCategoryName === "") {
-                        alert("Category name cannot be empty");
-                        return;
-                    }
-    
+
+                // Edit existing category
+                if (isEditing) {
                     $.ajax({
-                        url: '/update-category/' + categoryId,  // Change this URL to your backend endpoint
+                        url: '/update-category/' + editingCategoryId,
                         type: 'PUT',
                         contentType: 'application/json',
-                        data: JSON.stringify({
-                            c_name: updatedCategoryName
-                        }),
+                        data: JSON.stringify({ c_name: categoryName }),
                         success: function(response) {
-                            showAlert('Category updated successfully!');  // Show success alert
+                            showAlert('Category updated successfully!');
                             $('#add-new-event').modal('hide');
                             fetchCategories();
                         },
@@ -262,21 +190,49 @@
                             alert('Error updating category');
                         }
                     });
-                });
+                } else {
+                    // Add new category
+                    $.ajax({
+                        url: '/save-category',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ c_name: categoryName }),
+                        success: function(response) {
+                            showAlert('Category saved successfully!');
+                            $('#add-new-event').modal('hide');
+                            fetchCategories();
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error saving category');
+                        }
+                    });
+                }
             });
-    
+
+            // Handle edit category button click
+            $(document).on('click', '.edit-category', function() {
+                var categoryId = $(this).data('id');
+                var categoryName = $(this).data('name');
+
+                $('input[name="category-name"]').val(categoryName);  // Pre-fill the input field
+                $('#add-new-event').modal('show');  // Show modal for editing
+
+                isEditing = true;  // Set flag for editing
+                editingCategoryId = categoryId;  // Store category ID for editing
+            });
+
             // Handle delete category button click
             $(document).on('click', '.delete-category', function() {
                 var deleteCategoryId = $(this).data('id');
-    
+
                 $('#delete-confirmation-modal').modal('show');
-    
-                $('#confirm-delete-btn').on('click', function() {
+
+                $('#confirm-delete-btn').off('click').on('click', function() {
                     $.ajax({
-                        url: '/delete-category/' + deleteCategoryId,  // Change this URL to your backend endpoint
+                        url: '/delete-category/' + deleteCategoryId,
                         type: 'DELETE',
                         success: function(response) {
-                            showAlert('Category deleted successfully!');  // Show success alert
+                            showAlert('Category deleted successfully!');
                             $('#delete-confirmation-modal').modal('hide');
                             fetchCategories();
                         },
@@ -288,6 +244,6 @@
             });
         });
     </script>
-    
+
 </body>
 </html>
