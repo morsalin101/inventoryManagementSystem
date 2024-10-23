@@ -26,6 +26,8 @@ public class ProductController {
         // Optional: If you want to load existing products when displaying the product page
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products); // Add products to the model for Thymeleaf rendering
+        model.addAttribute("title", "Product");
+        model.addAttribute("pageTitle", "Product Page");
         return "product"; // This will return product.html
     }
 
