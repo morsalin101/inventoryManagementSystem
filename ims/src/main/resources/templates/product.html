@@ -146,9 +146,16 @@
 
    <script>
     $(document).ready(function () {
-        // Object to store categories for easy lookup
+        // Object to store categories
         var categoriesMap = {};
-    
+
+        // Function to reset the form
+        function resetForm() {
+            $('form')[0].reset(); // Reset all form fields
+            $('.save-product').data('id', ''); // Clear the product ID in the save button
+            $('input[name="product-image"]').val(''); // Clear image input
+        }
+
         // Function to show success alert
         function showAlert(message) {
             $('#success-alert-message').text(message);
@@ -157,55 +164,47 @@
                 $('#success-alert').removeClass('show');
             }, 3000);
         }
-    
-        // Function to populate the category dropdown from /get-category route
+
+        // Function to populate categories in the dropdown
         function populateCategories() {
             $.ajax({
                 url: '/get-category',
                 type: 'GET',
                 success: function (response) {
-                    console.log('Categories fetched:', response); // Debugging line
                     var categoryDropdown = $('select[name="category-id"]');
                     categoryDropdown.empty(); // Clear existing options
-    
-                    if (response.length === 0) {
-                        console.warn('No categories found'); // Warn if no categories
-                    }
-    
+
                     response.forEach(function (category) {
-                        // Store category name in the map
-                        categoriesMap[category.c_id] = category.c_name; // c_id maps to c_name
+                        categoriesMap[category.c_id] = category.c_name;
                         var option = $('<option></option>').attr('value', category.c_id).text(category.c_name);
                         categoryDropdown.append(option);
                     });
                 },
                 error: function (xhr) {
-                    console.error("Error fetching categories: ", xhr.responseText);
                     alert('Error fetching categories: ' + xhr.responseText);
                 }
             });
         }
-    
+
         // Function to fetch and display products in the table
         function fetchProducts() {
             $.ajax({
-                url: '/products/get', // Update to match the new endpoint
+                url: '/products/get',
                 type: 'GET',
                 success: function (response) {
                     var productTableBody = $('#product-table-body');
                     productTableBody.empty(); // Clear the table
-    
+
                     response.forEach(function (product) {
-                        // Assuming product.category contains the category ID
-                        var categoryName = categoriesMap[product.category] || 'Unknown'; // Get category name using the product.category ID
-    
+                        var categoryName = categoriesMap[product.category] || 'Unknown'; // Map category ID to name
+
                         var row = '<tr>' +
                             '<td>' + product.p_id + '</td>' +
                             '<td>' + product.p_name + '</td>' +
                             '<td>' + product.price + '</td>' +
                             '<td>' + product.quantity + '</td>' +
                             '<td><img src="data:image/jpeg;base64,' + product.image + '" width="50" height="50" alt="Product Image"></td>' +
-                            '<td>' + categoryName + '</td>' + // Use the category name
+                            '<td>' + categoryName + '</td>' +
                             '<td>' +
                                 '<button type="button" class="btn btn-primary btn-sm edit-product" data-id="' + product.p_id + '">Edit</button>' +
                                 ' <button type="button" class="btn btn-danger btn-sm delete-product" data-id="' + product.p_id + '">Delete</button>' +
@@ -219,47 +218,57 @@
                 }
             });
         }
-    
+
+        // Reset form when the "Add Product" button is clicked
+        $('#add-new-event').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // Button that triggered the modal
+            var productId = button.data('id'); // Get product ID
+
+            if (!productId) {
+                resetForm(); // Clear the form if adding a new product
+            }
+        });
+
         // Call the populate categories and fetch products when the page loads
         populateCategories();
         fetchProducts();
-    
+
         // Save new product or update existing product
         $('.save-product').on('click', function (e) {
             e.preventDefault();
-    
+
             var productId = $(this).data('id'); // If updating, productId will be present
             var productName = $('input[name="product-name"]').val();
             var price = $('input[name="price"]').val();
             var quantity = $('input[name="quantity"]').val();
             var categoryId = $('select[name="category-id"]').val();
             var formData = new FormData();
-    
-            // Create a product object
+
+            // Create product object
             var product = {
                 p_name: productName,
                 price: price,
                 quantity: quantity,
-                category: categoryId // Ensure this matches your backend expected format
+                category: categoryId
             };
-    
-            // Append product object as JSON string
+
+            // Append product as JSON string
             formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
             var imageFile = $('input[name="product-image"]')[0].files[0];
             if (imageFile) {
-                formData.append('image', imageFile); // Only append if there is an image
+                formData.append('image', imageFile); // Only append if image is selected
             }
-    
+
             var ajaxUrl = '/products/save'; // Default for adding
             var ajaxType = 'POST';
-    
+
             if (productId) {
-                ajaxUrl = '/products/update/' + productId; // Updated to reflect the new endpoint
+                ajaxUrl = '/products/update/' + productId; // For updating product
                 ajaxType = 'PUT';
             }
-    
-            $('.save-product').prop('disabled', true); // Disable save button
-    
+
+            $('.save-product').prop('disabled', true); // Disable save button while processing
+
             $.ajax({
                 url: ajaxUrl,
                 type: ajaxType,
@@ -269,34 +278,34 @@
                 success: function () {
                     showAlert('Product saved successfully!');
                     $('#add-new-event').modal('hide');
-                    $('form')[0].reset(); // Reset form
-                    fetchProducts();
+                    fetchProducts(); // Refresh product list
+                    resetForm(); // Reset form after saving
                 },
                 complete: function () {
-                    $('.save-product').prop('disabled', false); // Re-enable button
+                    $('.save-product').prop('disabled', false); // Re-enable save button
                 },
                 error: function () {
                     alert('Error saving product');
                 }
             });
         });
-    
+
         // Handle Edit Product button click
         $(document).on('click', '.edit-product', function () {
             var productId = $(this).data('id');
-    
-            // Fetch the product data for the selected ID and populate the form
+
+            // Fetch the product data and populate the form for editing
             $.ajax({
-                url: '/products/get/' + productId, // Adjusted to match your API
+                url: '/products/get/' + productId,
                 type: 'GET',
                 success: function (product) {
                     if (product) {
                         $('input[name="product-name"]').val(product.p_name);
                         $('input[name="price"]').val(product.price);
                         $('input[name="quantity"]').val(product.quantity);
-                        $('select[name="category-id"]').val(product.category); // Assuming product.category holds the category ID
+                        $('select[name="category-id"]').val(product.category);
                         $('.save-product').data('id', product.p_id); // Store the product ID in the save button
-                        $('#add-new-event').modal('show');
+                        $('#add-new-event').modal('show'); // Show the modal
                     } else {
                         alert('Product not found');
                     }
@@ -306,20 +315,20 @@
                 }
             });
         });
-    
+
         // Handle Delete Product button click
         $(document).on('click', '.delete-product', function () {
             var productId = $(this).data('id');
             $('#delete-confirmation-modal').modal('show');
-    
+
             $('#confirm-delete-btn').off('click').on('click', function () {
                 $.ajax({
-                    url: '/products/delete/' + productId, // Adjusted to match your API
+                    url: '/products/delete/' + productId,
                     type: 'DELETE',
                     success: function () {
                         showAlert('Product deleted successfully!');
                         $('#delete-confirmation-modal').modal('hide');
-                        fetchProducts();
+                        fetchProducts(); // Refresh product list
                     },
                     error: function () {
                         alert('Error deleting product');
@@ -328,9 +337,7 @@
             });
         });
     });
-    </script>
-    
-    
+  </script>
 
 </body>
 </html>
