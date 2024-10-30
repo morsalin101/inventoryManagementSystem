@@ -177,7 +177,7 @@
                 type: 'GET',
                 success: function (response) {
                     var categoryDropdown = $('select[name="category-id"]');
-                    categoryDropdown.empty(); 
+                    categoryDropdown.empty();
 
                     response.forEach(function (category) {
                         categoriesMap[category.c_id] = category.c_name;
@@ -198,17 +198,17 @@
                 type: 'GET',
                 success: function (response) {
                     var productTableBody = $('#product-table-body');
-                    productTableBody.empty(); 
+                    productTableBody.empty();
 
                     response.forEach(function (product) {
-                        var categoryName = categoriesMap[product.category] || 'Unknown'; 
+                        var categoryName = categoriesMap[product.category] || 'Unknown';
                         var quantityBadge = product.quantity < 50 ? '<span class="badge rounded-pill bg-warning float-right">Low</span>' : '<span class="badge rounded-pill bg-info float-right">High</span>';
 
                         var row = '<tr>' +
                             '<td>' + product.p_id + '</td>' +
                             '<td>' + product.p_name + '</td>' +
                             '<td>' + product.price + '</td>' +
-                            '<td>' + product.quantity +'</td>' +
+                            '<td>' + product.quantity + '</td>' +
                             '<td>' + quantityBadge + '</td>' +
                             '<td><img src="data:image/jpeg;base64,' + product.image + '" width="50" height="50" alt="Product Image"></td>' +
                             '<td>' + categoryName + '</td>' +
@@ -248,7 +248,6 @@
             var categoryId = $('select[name="category-id"]').val();
             var formData = new FormData();
 
-            // Create product object
             var product = {
                 p_name: productName,
                 price: price,
@@ -256,11 +255,10 @@
                 category: categoryId
             };
 
-            // Append product as JSON string
             formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
             var imageFile = $('input[name="product-image"]')[0].files[0];
             if (imageFile) {
-                formData.append('image', imageFile); // Only append if image is selected
+                formData.append('image', imageFile);
             }
 
             $.ajax({
@@ -272,8 +270,8 @@
                 success: function () {
                     showAlert('Product saved successfully!');
                     $('#add-new-event').modal('hide');
-                    fetchProducts(); // Refresh product list
-                    resetForm(); // Reset form after saving
+                    fetchProducts();
+                    resetForm();
                 },
                 error: function () {
                     alert('Error saving product');
@@ -289,7 +287,6 @@
             var categoryId = $('select[name="category-id"]').val();
             var formData = new FormData();
 
-            // Create product object
             var product = {
                 p_name: productName,
                 price: price,
@@ -297,11 +294,10 @@
                 category: categoryId
             };
 
-            // Append product as JSON string
             formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
             var imageFile = $('input[name="product-image"]')[0].files[0];
             if (imageFile) {
-                formData.append('image', imageFile); // Only append if image is selected
+                formData.append('image', imageFile);
             }
 
             $.ajax({
@@ -313,8 +309,8 @@
                 success: function () {
                     showAlert('Product updated successfully!');
                     $('#add-new-event').modal('hide');
-                    fetchProducts(); // Refresh product list
-                    resetForm(); // Reset form after updating
+                    fetchProducts();
+                    resetForm();
                 },
                 error: function () {
                     alert('Error updating product');
@@ -326,11 +322,11 @@
         $('.save-product').on('click', function (e) {
             e.preventDefault();
 
-            var productId = $(this).data('id'); // If updating, productId will be present
+            var productId = $(this).data('id');
             if (productId) {
-                updateProduct(productId); // Call update function
+                updateProduct(productId);
             } else {
-                saveProduct(); // Call save function
+                saveProduct();
             }
         });
 
@@ -347,8 +343,8 @@
                         $('input[name="price"]').val(product.price);
                         $('input[name="quantity"]').val(product.quantity);
                         $('select[name="category-id"]').val(product.category);
-                        $('.save-product').data('id', product.p_id); // Store the product ID in the save button
-                        $('#add-new-event').modal('show'); // Show the modal
+                        $('.save-product').data('id', product.p_id);
+                        $('#add-new-event').modal('show');
                     } else {
                         alert('Product not found');
                     }
@@ -371,7 +367,7 @@
                     success: function () {
                         showAlert('Product deleted successfully!');
                         $('#delete-confirmation-modal').modal('hide');
-                        fetchProducts(); // Refresh product list
+                        fetchProducts();
                     },
                     error: function () {
                         alert('Error deleting product');

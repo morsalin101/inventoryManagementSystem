@@ -117,142 +117,157 @@
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Function to show success alert and auto-hide it after 3 seconds
-            function showSuccessAlert(message) {
-                $('#success-alert-message').text(message);
-                $('#success-alert').addClass('show');
-                setTimeout(function () {
-                    $('#success-alert').removeClass('show');
-                }, 3000);  // Hide after 3 seconds
+   <script>
+    $(document).ready(function () {
+        // Function to show success alert and auto-hide it after 3 seconds
+        function showSuccessAlert(message) {
+            $('#success-alert-message').text(message);
+            $('#success-alert').addClass('show');
+            setTimeout(function () {
+                $('#success-alert').removeClass('show');
+            }, 3000);  // Hide after 3 seconds
+        }
+
+        // Fetch categories and display in the table
+        function loadCategories() {
+            $.ajax({
+                url: '/get-category',
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    let rows = '';
+                    $.each(data, function (index, category) {
+                        rows += `
+                            <tr>
+                                <td>${category.c_id}</td>
+                                <td>${category.c_name}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm edit-category" data-id="${category.c_id}" data-name="${category.c_name}">Edit</button>
+                                    <button class="btn btn-danger btn-sm delete-category" data-id="${category.c_id}">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#category-table-body').html(rows);
+                },
+                error: function () {
+                    alert('Error fetching categories');
+                }
+            });
+        }
+
+        // Call loadCategories on page load
+        loadCategories();
+
+        // Ensure modal backdrop is removed after hiding the modal
+        $('#add-new-event, #delete-confirmation-modal').on('hidden.bs.modal', function () {
+            $('.modal-backdrop').remove(); // Remove lingering backdrops
+            $('body').removeClass('modal-open'); // Remove body scroll lock
+        });
+
+        // Prevent duplicate modal openings
+        $('.btn-primary[data-target="#add-new-event"]').on('click', function () {
+            $('input[name="category-name"]').val(''); // Clear input
+            $('.save-category').off('click'); // Remove previous event handlers
+
+            if (!$('#add-new-event').hasClass('show')) {
+                $('#add-new-event').modal('show');
             }
-    
-            // Fetch categories and display in the table
-            function loadCategories() {
+
+            // Add new category
+            $('.save-category').on('click', function () {
+                const categoryName = $('input[name="category-name"]').val();
+                if (categoryName.trim() === '') {
+                    alert('Category name is required');
+                    return;
+                }
+
                 $.ajax({
-                    url: '/get-category',
-                    method: 'GET',
+                    url: '/save-category',
+                    method: 'POST',
                     contentType: 'application/json',
-                    success: function (data) {
-                        let rows = '';
-                        $.each(data, function (index, category) {
-                            rows += `
-                                <tr>
-                                    <td>${category.c_id}</td>
-                                    <td>${category.c_name}</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm edit-category" data-id="${category.c_id}" data-name="${category.c_name}">Edit</button>
-                                        <button class="btn btn-danger btn-sm delete-category" data-id="${category.c_id}">Delete</button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        $('#category-table-body').html(rows);
+                    data: JSON.stringify({ c_name: categoryName }),
+                    success: function () {
+                        $('#add-new-event').modal('hide');  // Close modal
+                        loadCategories();  // Reload categories
+                        showSuccessAlert('Category added successfully!');
                     },
                     error: function () {
-                        alert('Error fetching categories');
+                        alert('Error adding category');
                     }
-                });
-            }
-    
-            // Call loadCategories on page load
-            loadCategories();
-    
-            // Handle Add New Category button click
-            $('.btn-primary[data-target="#add-new-event"]').on('click', function () {
-                // Clear input
-                $('input[name="category-name"]').val('');
-                $('.save-category').off('click'); // Remove previous event handlers
-    
-                // Open modal using jQuery
-                $('#add-new-event').modal('show');
-    
-                // Add new category
-                $('.save-category').on('click', function () {
-                    const categoryName = $('input[name="category-name"]').val();
-                    if (categoryName.trim() === '') {
-                        alert('Category name is required');
-                        return;
-                    }
-    
-                    $.ajax({
-                        url: '/save-category',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ c_name: categoryName }),
-                        success: function () {
-                            $('#add-new-event').modal('hide');  // Close modal
-                            loadCategories();  // Reload categories
-                            showSuccessAlert('Category added successfully!');
-                        },
-                        error: function () {
-                            alert('Error adding category');
-                        }
-                    });
-                });
-            });
-    
-            // Edit category - populate modal with existing data
-            $(document).on('click', '.edit-category', function () {
-                const categoryId = $(this).data('id');
-                const categoryName = $(this).data('name');
-                $('input[name="category-name"]').val(categoryName);
-                $('.save-category').off('click'); // Remove previous event handlers
-    
-                // Open modal using jQuery
-                $('#add-new-event').modal('show');
-    
-                // Update category on Save
-                $('.save-category').on('click', function () {
-                    const updatedCategoryName = $('input[name="category-name"]').val();
-                    if (updatedCategoryName.trim() === '') {
-                        alert('Category name is required');
-                        return;
-                    }
-    
-                    $.ajax({
-                        url: `/update-category/${categoryId}`,
-                        method: 'PUT',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ c_name: updatedCategoryName }),
-                        success: function () {
-                            $('#add-new-event').modal('hide');
-                            loadCategories();
-                            showSuccessAlert('Category updated successfully!');
-                        },
-                        error: function () {
-                            alert('Error updating category');
-                        }
-                    });
-                });
-            });
-    
-            // Delete category
-            $(document).on('click', '.delete-category', function () {
-                const categoryId = $(this).data('id');
-                $('#confirm-delete-btn').off('click');  // Remove previous event handlers
-    
-                // Open delete confirmation modal
-                $('#delete-confirmation-modal').modal('show');
-    
-                $('#confirm-delete-btn').on('click', function () {
-                    $.ajax({
-                        url: `/delete-category/${categoryId}`,
-                        method: 'DELETE',
-                        success: function () {
-                            $('#delete-confirmation-modal').modal('hide');
-                            loadCategories();
-                            showSuccessAlert('Category deleted successfully!');
-                        },
-                        error: function () {
-                            alert('Error deleting category');
-                        }
-                    });
                 });
             });
         });
-    </script>
+
+        // Edit category - populate modal with existing data
+        $(document).on('click', '.edit-category', function () {
+            const categoryId = $(this).data('id');
+            const categoryName = $(this).data('name');
+            $('input[name="category-name"]').val(categoryName);
+            $('.save-category').off('click'); // Remove previous event handlers
+
+            if (!$('#add-new-event').hasClass('show')) {
+                $('#add-new-event').modal('show');
+            }
+
+            // Update category on Save
+            $('.save-category').on('click', function () {
+                const updatedCategoryName = $('input[name="category-name"]').val();
+                if (updatedCategoryName.trim() === '') {
+                    alert('Category name is required');
+                    return;
+                }
+
+                $.ajax({
+                    url: `/update-category/${categoryId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ c_name: updatedCategoryName }),
+                    success: function () {
+                        $('#add-new-event').modal('hide');
+                        loadCategories();
+                        showSuccessAlert('Category updated successfully!');
+                    },
+                    error: function () {
+                        alert('Error updating category');
+                    }
+                });
+            });
+        });
+
+        // Delete category
+        $(document).on('click', '.delete-category', function () {
+            const categoryId = $(this).data('id');
+            $('#confirm-delete-btn').off('click');  // Remove previous event handlers
+
+            if (!$('#delete-confirmation-modal').hasClass('show')) {
+                $('#delete-confirmation-modal').modal('show');
+            }
+
+            $('#confirm-delete-btn').on('click', function () {
+                $.ajax({
+                    url: `/delete-category/${categoryId}`,
+                    method: 'DELETE',
+                    success: function () {
+                        $('#delete-confirmation-modal').modal('hide');
+                        loadCategories();
+                        showSuccessAlert('Category deleted successfully!');
+                    },
+                    error: function () {
+                        alert('Error deleting category');
+                    }
+                });
+            });
+        });
+
+        // Global AJAX stop to remove lingering backdrops after AJAX calls
+        $(document).ajaxStop(function () {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+        });
+    });
+</script>
+
     
 </body>
 </html>

@@ -131,173 +131,184 @@
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Function to show success alert and auto-hide it after 3 seconds
-            function showSuccessAlert(message) {
-                $('#success-alert-message').text(message);
-                $('#success-alert').addClass('show');
-                setTimeout(function () {
-                    $('#success-alert').removeClass('show');
-                }, 3000);  // Hide after 3 seconds
-            }
+   <script>
+    $(document).ready(function () {
+        // Function to show success alert and auto-hide it after 3 seconds
+        function showSuccessAlert(message) {
+            $('#success-alert-message').text(message);
+            $('#success-alert').addClass('show');
+            setTimeout(function () {
+                $('#success-alert').removeClass('show');
+            }, 3000);  // Hide after 3 seconds
+        }
 
-            // Fetch customers and display in the table
-            function loadCustomers() {
+        // Fetch customers and display in the table
+        function loadCustomers() {
+            $.ajax({
+                url: 'customers/get-customers',
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    let rows = '';
+                    $.each(data, function (index, customer) {
+                        rows += `
+                            <tr>
+                                <td>${customer.id}</td>
+                                <td>${customer.name}</td>
+                                <td>${customer.address}</td>
+                                <td>${customer.email}</td>
+                                <td>${customer.phone}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm edit-customer" data-id="${customer.id}" data-name="${customer.name}" data-address="${customer.address}" data-email="${customer.email}" data-phone="${customer.phone}">Edit</button>
+                                    <button class="btn btn-danger btn-sm delete-customer" data-id="${customer.id}">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#customer-table-body').html(rows);
+                },
+                error: function () {
+                    alert('Error fetching customers');
+                }
+            });
+        }
+
+        // Call loadCustomers on page load
+        loadCustomers();
+
+        // Handle Add New Customer button click
+        $('.btn-primary[data-target="#add-new-customer"]').on('click', function () {
+            // Clear input
+            $('input[name="customer-name"]').val('');
+            $('input[name="customer-address"]').val('');
+            $('input[name="customer-email"]').val('');
+            $('input[name="customer-phone"]').val('');
+            $('.save-customer').off('click'); // Remove previous event handlers
+
+            // Open modal using jQuery
+            $('#add-new-customer').modal('show');
+
+            // Add new customer
+            $('.save-customer').on('click', function () {
+                const customerName = $('input[name="customer-name"]').val();
+                const customerAddress = $('input[name="customer-address"]').val();
+                const customerEmail = $('input[name="customer-email"]').val();
+                const customerPhone = $('input[name="customer-phone"]').val();
+                
+                if (customerName.trim() === '' || customerEmail.trim() === '' || customerPhone.trim() === '') {
+                    alert('Name, Email, and Phone are required');
+                    return;
+                }
+
                 $.ajax({
-                    url: 'customers/get-customers',
-                    method: 'GET',
+                    url: 'customers/save-customer',
+                    method: 'POST',
                     contentType: 'application/json',
-                    success: function (data) {
-                        let rows = '';
-                        $.each(data, function (index, customer) {
-                            rows += `
-                                <tr>
-                                    <td>${customer.id}</td>
-                                    <td>${customer.name}</td>
-                                    <td>${customer.address}</td>
-                                    <td>${customer.email}</td>
-                                    <td>${customer.phone}</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm edit-customer" data-id="${customer.id}" data-name="${customer.name}" data-address="${customer.address}" data-email="${customer.email}" data-phone="${customer.phone}">Edit</button>
-                                        <button class="btn btn-danger btn-sm delete-customer" data-id="${customer.id}">Delete</button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        $('#customer-table-body').html(rows);
+                    data: JSON.stringify({ 
+                        name: customerName, 
+                        address: customerAddress, 
+                        email: customerEmail, 
+                        phone: customerPhone 
+                    }),
+                    success: function () {
+                        $('#add-new-customer').modal('hide');  // Close modal
+                        loadCustomers();  // Reload customers
+                        showSuccessAlert('Customer added successfully!');
                     },
                     error: function () {
-                        alert('Error fetching customers');
+                        alert('Error adding customer');
                     }
-                });
-            }
-
-            // Call loadCustomers on page load
-            loadCustomers();
-
-            // Handle Add New Customer button click
-            $('.btn-primary[data-target="#add-new-customer"]').on('click', function () {
-                // Clear input
-                $('input[name="customer-name"]').val('');
-                $('input[name="customer-address"]').val('');
-                $('input[name="customer-email"]').val('');
-                $('input[name="customer-phone"]').val('');
-                $('.save-customer').off('click'); // Remove previous event handlers
-
-                // Open modal using jQuery
-                $('#add-new-customer').modal('show');
-
-                // Add new customer
-                $('.save-customer').on('click', function () {
-                    const customerName = $('input[name="customer-name"]').val();
-                    const customerAddress = $('input[name="customer-address"]').val();
-                    const customerEmail = $('input[name="customer-email"]').val();
-                    const customerPhone = $('input[name="customer-phone"]').val();
-                    
-                    if (customerName.trim() === '' || customerEmail.trim() === '' || customerPhone.trim() === '') {
-                        alert('Name, Email, and Phone are required');
-                        return;
-                    }
-
-                    $.ajax({
-                        url: 'customers/save-customer',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ 
-                            name: customerName, 
-                            address: customerAddress, 
-                            email: customerEmail, 
-                            phone: customerPhone 
-                        }),
-                        success: function () {
-                            $('#add-new-customer').modal('hide');  // Close modal
-                            loadCustomers();  // Reload customers
-                            showSuccessAlert('Customer added successfully!');
-                        },
-                        error: function () {
-                            alert('Error adding customer');
-                        }
-                    });
-                });
-            });
-
-            // Edit customer - populate modal with existing data
-            $(document).on('click', '.edit-customer', function () {
-                const customerId = $(this).data('id');
-                const customerName = $(this).data('name');
-                const customerAddress = $(this).data('address');
-                const customerEmail = $(this).data('email');
-                const customerPhone = $(this).data('phone');
-
-                $('input[name="customer-name"]').val(customerName);
-                $('input[name="customer-address"]').val(customerAddress);
-                $('input[name="customer-email"]').val(customerEmail);
-                $('input[name="customer-phone"]').val(customerPhone);
-                $('.save-customer').off('click'); // Remove previous event handlers
-
-                // Open modal using jQuery
-                $('#add-new-customer').modal('show');
-
-                // Update customer on Save
-                $('.save-customer').on('click', function () {
-                    const updatedCustomerName = $('input[name="customer-name"]').val();
-                    const updatedCustomerAddress = $('input[name="customer-address"]').val();
-                    const updatedCustomerEmail = $('input[name="customer-email"]').val();
-                    const updatedCustomerPhone = $('input[name="customer-phone"]').val();
-
-                    if (updatedCustomerName.trim() === '' || updatedCustomerEmail.trim() === '' || updatedCustomerPhone.trim() === '') {
-                        alert('Name, Email, and Phone are required');
-                        return;
-                    }
-
-                    $.ajax({
-                        url: `customers/update-customer/${customerId}`,
-                        method: 'PUT',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            name: updatedCustomerName,
-                            address: updatedCustomerAddress,
-                            email: updatedCustomerEmail,
-                            phone: updatedCustomerPhone
-                        }),
-                        success: function () {
-                            $('#add-new-customer').modal('hide');
-                            loadCustomers();
-                            showSuccessAlert('Customer updated successfully!');
-                        },
-                        error: function () {
-                            alert('Error updating customer');
-                        }
-                    });
-                });
-            });
-
-            // Delete customer
-            $(document).on('click', '.delete-customer', function () {
-                const customerId = $(this).data('id');
-                $('#confirm-delete-btn').off('click');  // Remove previous event handlers
-
-                // Open delete confirmation modal
-                $('#delete-confirmation-modal').modal('show');
-
-                $('#confirm-delete-btn').on('click', function () {
-                    $.ajax({
-                        url: `customers/delete-customer/${customerId}`,
-                        method: 'DELETE',
-                        success: function () {
-                            $('#delete-confirmation-modal').modal('hide');
-                            loadCustomers();
-                            showSuccessAlert('Customer deleted successfully!');
-                        },
-                        error: function () {
-                            alert('Error deleting customer');
-                        }
-                    });
                 });
             });
         });
-    </script>
+
+        // Edit customer - populate modal with existing data
+        $(document).on('click', '.edit-customer', function () {
+            const customerId = $(this).data('id');
+            const customerName = $(this).data('name');
+            const customerAddress = $(this).data('address');
+            const customerEmail = $(this).data('email');
+            const customerPhone = $(this).data('phone');
+
+            $('input[name="customer-name"]').val(customerName);
+            $('input[name="customer-address"]').val(customerAddress);
+            $('input[name="customer-email"]').val(customerEmail);
+            $('input[name="customer-phone"]').val(customerPhone);
+            $('.save-customer').off('click'); // Remove previous event handlers
+
+            // Open modal using jQuery
+            $('#add-new-customer').modal('show');
+
+            // Update customer on Save
+            $('.save-customer').on('click', function () {
+                const updatedCustomerName = $('input[name="customer-name"]').val();
+                const updatedCustomerAddress = $('input[name="customer-address"]').val();
+                const updatedCustomerEmail = $('input[name="customer-email"]').val();
+                const updatedCustomerPhone = $('input[name="customer-phone"]').val();
+
+                if (updatedCustomerName.trim() === '' || updatedCustomerEmail.trim() === '' || updatedCustomerPhone.trim() === '') {
+                    alert('Name, Email, and Phone are required');
+                    return;
+                }
+
+                $.ajax({
+                    url: `customers/update-customer/${customerId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: updatedCustomerName,
+                        address: updatedCustomerAddress,
+                        email: updatedCustomerEmail,
+                        phone: updatedCustomerPhone
+                    }),
+                    success: function () {
+                        $('#add-new-customer').modal('hide');
+                        loadCustomers();
+                        showSuccessAlert('Customer updated successfully!');
+                    },
+                    error: function () {
+                        alert('Error updating customer');
+                    }
+                });
+            });
+        });
+
+        $('#add-new-event, #delete-confirmation-modal').on('hidden.bs.modal', function () {
+            $('.modal-backdrop').remove(); // Remove lingering backdrops
+            $('body').removeClass('modal-open'); // Remove body scroll lock
+        });
+
+        // Delete customer
+        $(document).on('click', '.delete-customer', function () {
+            const customerId = $(this).data('id');
+            $('#confirm-delete-btn').off('click');  // Remove previous event handlers
+
+            // Open delete confirmation modal
+            $('#delete-confirmation-modal').modal('show');
+
+            $('#confirm-delete-btn').on('click', function () {
+                $.ajax({
+                    url: `customers/delete-customer/${customerId}`,
+                    method: 'DELETE',
+                    success: function () {
+                        $('#delete-confirmation-modal').modal('hide');
+                        loadCustomers();
+                        showSuccessAlert('Customer deleted successfully!');
+                    },
+                    error: function () {
+                        alert('Error deleting customer');
+                    }
+                });
+            });
+        });
+
+        // Global AJAX stop to remove lingering backdrops after AJAX calls
+        $(document).ajaxStop(function () {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+        });
+    });
+</script>
 
 </body>
 </html>
