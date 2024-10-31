@@ -32,15 +32,21 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label class="control-label">Customer</label>
-                                <input type="text" class="form-control" id="customer-name" placeholder="Select Customer">
+                                <select class="form-control" id="customer-name">
+                                    <option value="">Select Customer</option>
+                                </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="control-label">Category</label>
-                                <input type="text" class="form-control" id="category" placeholder="Select Category">
+                                <select class="form-control" id="category">
+                                    <option value="">Select Category</option>
+                                </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="control-label">Product</label>
-                                <input type="text" class="form-control" id="product" placeholder="Select Product">
+                                <select class="form-control" id="product">
+                                    <option value="">Select Product</option>
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <label class="control-label">Quantity</label>
@@ -61,17 +67,18 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Customer Name</th>
                                 <th scope="col">Product</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Price</th>
+                                <th scope="col">Total</th>
                             </tr>
                         </thead>
                         <tbody id="invoice-table-body">
                             <!-- Invoice entries will be dynamically inserted here -->
                         </tbody>
                     </table>
+                    <button type="button" class="btn btn-success" id="save-invoice">Save</button>
                 </div>
             </div>
         </div>
@@ -81,44 +88,123 @@
 </div>
 
 <!-- jQuery and Bootstrap JS -->
+<div th:replace="script::script"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    $(document).ready(function () {
-        // Add item to invoice table
-        $('#add-to-invoice').on('click', function () {
-            const customer = $('#customer-name').val();
-            const category = $('#category').val();
-            const product = $('#product').val();
-            const quantity = $('#quantity').val();
-            const price = (Math.random() * 100).toFixed(2); // Mock price for demo
-            const date = new Date().toLocaleDateString();
+$(document).ready(function () {
+    let productPrices = {};
 
-            if (!customer || !category || !product || !quantity) {
-                alert('All fields are required!');
-                return;
+    // Fetch and populate customers
+    $.ajax({
+        url: '/customers/get-customers',
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (data) {
+            data.forEach(customer => {
+                $('#customer-name').append(new Option(customer.name, customer.id));
+            });
+        }
+    });
+
+    // Fetch and populate categories
+    $.ajax({
+        url: '/get-category',
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (data) {
+            data.forEach(category => {
+                $('#category').append(new Option(category.c_name, category.c_id));
+            });
+        }
+    });
+
+    // Fetch and populate products based on selected category
+    $('#category').on('change', function () {
+        const categoryId = $(this).val();
+        $('#product').empty().append(new Option("Select Product", ""));
+        if (categoryId) {
+            $.ajax({
+                url: `/products/get?category=${categoryId}`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    data.forEach(product => {
+                        $('#product').append(new Option(product.p_name, product.p_id));
+                        productPrices[product.p_id] = product.price; // Store product price for calculations
+                    });
+                }
+            });
+        }
+    });
+
+    // Add item to invoice table with total calculation
+    $('#add-to-invoice').on('click', function () {
+        const product = $('#product option:selected').text();
+        const productId = $('#product').val();
+        const quantity = $('#quantity').val();
+        const date = new Date().toLocaleDateString();
+
+        if (!$('#customer-name').val() || !product || !quantity) {
+            alert('All fields are required!');
+            return;
+        }
+
+        const price = productPrices[productId] || 0;
+        const total = (quantity * price).toFixed(2);
+
+        const row = `
+            <tr>
+                <td>${product}</td>
+                <td>${date}</td>
+                <td>${quantity}</td>
+                <td>$${price}</td>
+                <td>$${total}</td>
+            </tr>
+        `;
+        $('#invoice-table-body').append(row);
+
+        // Clear only category, product, and quantity fields after adding
+        $('#category').val('');
+        $('#product').val('');
+        $('#quantity').val('');
+    });
+
+    // Save invoice and reset all inputs
+    $('#save-invoice').on('click', function () {
+        const customerId = $('#customer-name').val();
+        const invoiceData = [];
+        
+        $('#invoice-table-body tr').each(function () {
+            const row = $(this);
+            const rowData = {
+                customer_id: customerId,
+                product_name: row.find('td').eq(0).text(),
+                quantity: row.find('td').eq(2).text(),
+                total_price: row.find('td').eq(4).text().replace('$', '')
+            };
+            invoiceData.push(rowData);
+        });
+
+        $.ajax({
+            url: '/orders/save',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(invoiceData),
+            success: function () {
+                alert('Invoice saved successfully');
+                
+                // Reset form fields and invoice table
+                $('#customer-name').val('');
+                $('#category').val('');
+                $('#product').val('');
+                $('#quantity').val('');
+                $('#invoice-table-body').empty();
             }
-
-            const row = `
-                <tr>
-                    <td>${customer}</td>
-                    <td>${product}</td>
-                    <td>${date}</td>
-                    <td>${quantity}</td>
-                    <td>$${price}</td>
-                </tr>
-            `;
-
-            $('#invoice-table-body').append(row);
-
-            // Clear input fields after adding
-            $('#customer-name').val('');
-            $('#category').val('');
-            $('#product').val('');
-            $('#quantity').val('');
         });
     });
+});
 </script>
+
 </body>
 </html>
