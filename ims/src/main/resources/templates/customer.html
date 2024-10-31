@@ -221,6 +221,12 @@
                 });
             });
         });
+        
+        // Remove lingering backdrops and modal-open class after hiding the modal
+        $('#add-new-customer, #delete-confirmation-modal').on('hidden.bs.modal', function () {
+            $('.modal-backdrop').remove(); // Remove lingering backdrops
+            $('body').removeClass('modal-open'); // Remove body scroll lock
+        });
 
         // Edit customer - populate modal with existing data
         $(document).on('click', '.edit-customer', function () {
@@ -273,11 +279,6 @@
             });
         });
 
-        $('#add-new-event, #delete-confirmation-modal').on('hidden.bs.modal', function () {
-            $('.modal-backdrop').remove(); // Remove lingering backdrops
-            $('body').removeClass('modal-open'); // Remove body scroll lock
-        });
-
         // Delete customer
         $(document).on('click', '.delete-customer', function () {
             const customerId = $(this).data('id');
@@ -309,6 +310,7 @@
         });
     });
 </script>
+
 
 </body>
 </html>
