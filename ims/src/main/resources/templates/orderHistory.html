@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Order History</title>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
+    <link th:href="@{/css/style.min.css}" rel="stylesheet">
+</head>
+<body>
+
+<div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+     data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+
+    <div th:replace="header :: header"></div>
+
+    <div class="page-wrapper">
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-12 d-flex no-block align-items-center">
+                    <h4 class="page-title" th:text="${pageTitle}">Order History</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-0">Order Table</h5>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-table-body">
+                        <!-- Table rows will be appended here using jQuery -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="footer :: footer"></div>
+</div>
+
+<!-- jQuery and Bootstrap JS -->
+<th:block th:replace="script :: script"></th:block>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Fetch orders using AJAX
+    $.ajax({
+        url: "/get-orders",
+        method: "GET",
+        success: function(data) {
+            // Populate the table with unique orders
+            let orderTableBody = $("#order-table-body");
+            orderTableBody.empty(); // Clear any existing rows
+
+            data.forEach(function(order) {
+                let badgeClass = order.status === "Pending" ? "badge bg-success" : "badge rounded-pill bg-primary";
+                let badgeText = order.status === "Pending" ? "Pending" : "Paid";
+                let actionButton = order.status === "Pending" 
+                    ? `<button class="badge bg-secondary" data-order-id="${order.orderId}">click here to Paid</button>` 
+                    : '';
+
+                let row = `
+                    <tr>
+                        <td>${order.order_id}</td>
+                        <td>${order.order_date}</td>
+                        <td>
+                            <span class="${badgeClass}">${badgeText}</span>
+                            ${actionButton}
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">Invoice</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                `;
+
+                orderTableBody.append(row);
+            });
+
+            // Handle the "Paid" button click
+            $(".paid-btn").on("click", function() {
+                let orderId = $(this).data("order-id");
+                $.ajax({
+                    url: `/update-order-status/${orderId}`,
+                    method: "POST",
+                    success: function() {
+                        alert("Order status updated to Paid!");
+                        location.reload(); // Reload the page to see the updated status
+                    },
+                    error: function(err) {
+                        console.error("Error updating order status:", err);
+                        alert("Failed to update order status.");
+                    }
+                });
+            });
+        },
+        error: function(err) {
+            console.error("Error fetching orders:", err);
+        }
+    });
+});
+</script>
+
+</body>
+</html>

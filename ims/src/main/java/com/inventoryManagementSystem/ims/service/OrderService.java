@@ -5,7 +5,9 @@ import com.inventoryManagementSystem.ims.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -20,4 +22,23 @@ public class OrderService {
     public List<Order> saveOrders(List<Order> orders) {
         return orderRepository.saveAll(orders);
     }
+
+    public List<Order> getUniqueOrders() {
+        // Get all orders and collect unique order IDs
+        return orderRepository.findAll().stream()
+                .collect(Collectors.toMap(Order::getOrderId, order -> order, (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+    }
+   
+    public void updateStatusToPaidForOrderId(String orderId) {
+        // Fetch all orders with the given order_id
+        List<Order> orders = orderRepository.findAllByOrderId(orderId);
+        for (Order order : orders) {
+            order.setStatus("Paid"); // Update status to "Paid"
+        }
+        orderRepository.saveAll(orders); // Save all updated orders
+    }
+   
 }
