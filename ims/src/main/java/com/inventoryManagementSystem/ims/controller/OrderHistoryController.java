@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -32,9 +33,9 @@ public class OrderHistoryController {
     }
 
     @PostMapping("/update-order-status/{orderId}")
-    public String updateOrderStatus(@PathVariable String orderId) {
+    public ResponseEntity<String> updateOrderStatus(@PathVariable String orderId) {
         // Call the service method to update all orders with the given order_id to "Paid"
         orderService.updateStatusToPaidForOrderId(orderId);
-        return "Order statuses updated to Paid successfully!";
+        return  ResponseEntity.ok("Order status updated successfully!");
     }
 }

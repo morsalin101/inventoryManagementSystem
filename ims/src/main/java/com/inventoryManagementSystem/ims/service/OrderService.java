@@ -32,9 +32,9 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
    
-    public void updateStatusToPaidForOrderId(String orderId) {
+    public void updateStatusToPaidForOrderId(String order_Id) {
         // Fetch all orders with the given order_id
-        List<Order> orders = orderRepository.findAllByOrderId(orderId);
+        List<Order> orders = orderRepository.findAllByOrderId(order_Id);
         for (Order order : orders) {
             order.setStatus("Paid"); // Update status to "Paid"
         }

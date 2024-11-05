@@ -68,12 +68,12 @@ $(document).ready(function() {
                 let badgeClass = order.status === "Pending" ? "badge bg-success" : "badge rounded-pill bg-primary";
                 let badgeText = order.status === "Pending" ? "Pending" : "Paid";
                 let actionButton = order.status === "Pending" 
-                    ? `<button class="badge bg-secondary" data-order-id="${order.orderId}">click here to Paid</button>` 
+                    ? `<button class="badge bg-secondary paid-btn" data-order-id="${order.orderId}">click here to Paid</button>` 
                     : '';
 
                 let row = `
                     <tr>
-                        <td>${order.order_id}</td>
+                        <td>${order.orderId}</td>
                         <td>${order.order_date}</td>
                         <td>
                             <span class="${badgeClass}">${badgeText}</span>

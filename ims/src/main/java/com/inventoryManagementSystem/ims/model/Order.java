@@ -14,18 +14,18 @@ import java.time.LocalDate;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-increment primary key
-    private Long id;  // Primary key with auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(name = "orderId")  // Explicitly specify the column name
     private String orderId;
+
     private String customer_name;
-    private Integer customer_id;  // Use Integer instead of int
+    private Integer customer_id;
     private String product_name;
     private String phone;
-    private Integer quantity;      // Use Integer instead of int
-    private Double total_price = 0.0;    // Use Double instead of double
-    private LocalDate order_date = LocalDate.now();   // LocalDate allows null by default
-    private String status = "Pending";  // Default value for status
-
-    // Add other fields here with wrapper classes if needed
+    private Integer quantity;
+    private Double total_price = 0.0;
+    private LocalDate order_date = LocalDate.now();
+    private String status = "Pending";
 }
