@@ -18,9 +18,10 @@ public class CustomerService {
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
+    
 
     // Get customer by ID
-    public Optional<Customer> getCustomerById(Long id) {
+    public Optional<Customer> getCustomerById(long id) {
         return customerRepository.findById(id);
     }
 

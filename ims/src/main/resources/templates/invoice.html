@@ -1,138 +1,154 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Invoice</title>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <style>
-        .invoice-title h2, .invoice-title h3 {
-            display: inline-block;
-        }
-
-        .table > tbody > tr > .no-line {
-            border-top: none;
-        }
-
-        .table > thead > tr > .no-line {
-            border-bottom: none;
-        }
-
-        .table > tbody > tr > .thick-line {
-            border-top: 2px solid;
-        }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        .inv-title { text-align: center; margin-bottom: 20px; }
+        .inv-header, .inv-body, .inv-footer { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        table, th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        button { padding: 10px 20px; font-size: 16px; }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="invoice-title bg-warning bg-gradient">
-                    <h2>Invoice</h2><h3 class="pull-right">Order # 12345</h3>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <address>
-                            <strong>Billed To:</strong><br>
-                            John Smith<br>
-                            1234 Main<br>
-                            Apt. 4B<br>
-                            Springfield, ST 54321
-                        </address>
-                    </div>
-                    <div class="col-xs-6 text-right">
-                        <address>
-                            <strong>Shipped To:</strong><br>
-                            Jane Smith<br>
-                            1234 Main<br>
-                            Apt. 4B<br>
-                            Springfield, ST 54321
-                        </address>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <address>
-                            <strong>Payment Method:</strong><br>
-                            Visa ending **** 4242<br>
-                            jsmith@email.com
-                        </address>
-                    </div>
-                    <div class="col-xs-6 text-right">
-                        <address>
-                            <strong>Order Date:</strong><br>
-                            March 7, 2014<br><br>
-                        </address>
-                    </div>
-                </div>
-            </div>
+    <div class="container" id="invoice-content">
+        <div class="inv-title">
+            <h1>Invoice # <span id="invoice-id" th:text="${orderId}"></span></h1>
         </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><strong>Order summary</strong></h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr>
-                                        <td><strong>Item</strong></td>
-                                        <td class="text-center"><strong>Price</strong></td>
-                                        <td class="text-center"><strong>Quantity</strong></td>
-                                        <td class="text-right"><strong>Totals</strong></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- foreach ($order->lineItems as $line) or some such thing here -->
-                                    <tr>
-                                        <td>BS-200</td>
-                                        <td class="text-center">$10.99</td>
-                                        <td class="text-center">1</td>
-                                        <td class="text-right">$10.99</td>
-                                    </tr>
-                                    <tr>
-                                        <td>BS-400</td>
-                                        <td class="text-center">$20.00</td>
-                                        <td class="text-center">3</td>
-                                        <td class="text-right">$60.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>BS-1000</td>
-                                        <td class="text-center">$600.00</td>
-                                        <td class="text-center">1</td>
-                                        <td class="text-right">$600.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="thick-line"></td>
-                                        <td class="thick-line"></td>
-                                        <td class="thick-line text-center"><strong>Subtotal</strong></td>
-                                        <td class="thick-line text-right">$670.99</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-line"></td>
-                                        <td class="no-line"></td>
-                                        <td class="no-line text-center"><strong>Shipping</strong></td>
-                                        <td class="no-line text-right">$15</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="no-line"></td>
-                                        <td class="no-line"></td>
-                                        <td class="no-line text-center"><strong>Total</strong></td>
-                                        <td class="no-line text-right">$685.99</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        <div class="inv-header">
+            <h2>Customer Information</h2>
+            <ul>
+                <li>Name: <span id="customer-name"></span></li>
+                <li>Address: <span id="customer-address"></span></li>
+                <li>Phone: <span id="customer-phone"></span></li>
+                <li>Email: <span id="customer-email"></span></li>
+            </ul>
+        </div>
+
+        <div class="inv-body">
+            <h2>Order Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="order-details">
+                    <!-- Order rows will be dynamically appended here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="inv-footer">
+            <table>
+                <tr>
+                    <th>Sub total</th>
+                    <td id="subtotal">Subtotal</td>
+                </tr>
+            </table>
+            <button onclick="generatePDF()">Download as PDF</button>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            const orderId = $('#invoice-id').text().trim();
+
+            if (!orderId) {
+                alert("Order ID not found!");
+                return;
+            }
+
+            $.ajax({
+                url: `/invoice-data/${orderId}`,
+                method: "GET",
+                success: function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Populate Customer Information
+                    $('#customer-name').text(data.customer.name);
+                    $('#customer-address').text(data.customer.address);
+                    $('#customer-phone').text(data.customer.phone);
+                    $('#customer-email').text(data.customer.email);
+
+                    // Populate Order Details
+                    let subtotal = 0;
+                    data.orders.forEach(order => {
+                        $('#order-details').append(`
+                            <tr>
+                                <td>${order.product_name}</td>
+                                <td>${order.quantity}</td>
+                                <td>${order.total_price}</td>
+                            </tr>
+                        `);
+                        subtotal += order.total_price || 0;
+                    });
+
+                    // Populate Subtotal
+                    $('#subtotal').text(subtotal.toFixed(2));
+                },
+                error: function(err) {
+                    console.error("Error fetching invoice data:", err);
+                    alert("Failed to load invoice data.");
+                }
+            });
+        });
+
+        function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'pt', 'a4');
+    const invoiceContent = document.getElementById('invoice-content');
+
+    // Hide the download button
+    const downloadButton = document.querySelector('button');
+    downloadButton.style.display = 'none';
+
+    html2canvas(invoiceContent).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 595.28; // A4 width in points
+        const pageHeight = 841.89; // A4 height in points
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        pdf.save("invoice.pdf");
+
+        // Show the download button again after generating the PDF
+        downloadButton.style.display = 'inline-block';
+    }).catch(error => {
+        console.error("Error generating PDF:", error);
+        alert("Failed to generate PDF. Please check the console for details.");
+
+        // Ensure the download button is visible if an error occurs
+        downloadButton.style.display = 'inline-block';
+    });
+}
+
+    </script>
 </body>
 </html>

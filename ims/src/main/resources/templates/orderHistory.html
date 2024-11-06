@@ -65,33 +65,43 @@
                     // Populate the table with unique orders
                     let orderTableBody = $("#order-table-body");
                     orderTableBody.empty(); // Clear any existing rows
-                    //btnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
                     data.forEach(function (order) {
                         let badgeClass = order.status === "Pending" ? "badge bg-success" : "badge rounded-pill bg-primary";
                         let badgeText = order.status === "Pending" ? "Pending" : "Paid";
 
-                        // Updated actionButton to look like a badge
+                        // Action button for marking as "Paid"
                         let actionButton = order.status === "Pending"
                             ? `<button class="badge bg-warning text-dark paid-btn" data-order-id="${order.orderId}" style="border: none; font-weight: bold;">click here to Paid</button>`
                             : '';
 
+                        // Row for each order
                         let row = `
-                    <tr>
-                        <td>${order.orderId}</td>
-                        <td>${order.order_date}</td>
-                        <td>
-                            <span class="${badgeClass}">${badgeText}</span>
-                            ${actionButton}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">Invoice</button>
-                            <button class="btn btn-danger btn-sm delete-btn" data-order-id="${order.orderId}">Delete</button>
-                        </td>
-                    </tr>
-                `;
+                            <tr>
+                                <td>${order.orderId}</td>
+                                <td>${order.order_date}</td>
+                                <td>
+                                    <span class="${badgeClass}">${badgeText}</span>
+                                    ${actionButton}
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm invoice-btn" data-order-id="${order.orderId}">Invoice</button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-order-id="${order.orderId}">Delete</button>
+                                </td>
+                            </tr>
+                        `;
 
                         orderTableBody.append(row);
                     });
+
+                   // Updated Invoice Button Click Event in `orderHistory.html`
+                   // Invoice Button Click Event in `orderHistory.html`
+                    $(".invoice-btn").on("click", function () {
+                        const orderId = $(this).data("order-id");
+                        window.open(`/invoice/${orderId}`, '_blank'); // Open the invoice as a Thymeleaf view
+                    });
+
+
 
                     // Handle the "Paid" button click
                     $(".paid-btn").on("click", function () {

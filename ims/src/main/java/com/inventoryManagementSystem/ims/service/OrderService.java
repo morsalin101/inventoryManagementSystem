@@ -48,5 +48,14 @@ public class OrderService {
         }
         return false; // No orders found with the specified orderId
     }
+
+    public Optional<Order> getOrderById(Long id) {
+        return orderRepository.findById(id);
+    }
+
+    public List<Order> getOrdersByOrderId(String orderId) {
+        return orderRepository.findAllByOrderId(orderId);
+    }
+    
     
 }
