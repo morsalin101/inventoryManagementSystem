@@ -38,4 +38,17 @@ public class OrderHistoryController {
         orderService.updateStatusToPaidForOrderId(orderId);
         return  ResponseEntity.ok("Order status updated successfully!");
     }
+
+
+    @PostMapping("/delete-order/{orderId}")
+public ResponseEntity<String> deleteOrder(@PathVariable String orderId) {
+    // Call the service method to delete the order with the given order_id
+    boolean isDeleted = orderService.deleteOrderByOrderId(orderId);
+    if (isDeleted) {
+        return ResponseEntity.ok("Order deleted successfully!");
+    } else {
+        return ResponseEntity.status(404).body("Order not found!");
+    }
+}
+
 }

@@ -40,5 +40,13 @@ public class OrderService {
         }
         orderRepository.saveAll(orders); // Save all updated orders
     }
-   
+    public boolean deleteOrderByOrderId(String orderId) {
+        List<Order> orders = orderRepository.findAllByOrderId(orderId);
+        if (!orders.isEmpty()) {
+            orderRepository.deleteAll(orders); // Deletes all orders with the specified orderId
+            return true;
+        }
+        return false; // No orders found with the specified orderId
+    }
+    
 }
