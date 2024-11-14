@@ -21,14 +21,21 @@ public class ProductController {
     private ProductService productService;
 
     // Display the product page
-    @GetMapping
+    @GetMapping("/all-products")
     public String getProductPage(Model model) {
         // Optional: If you want to load existing products when displaying the product page
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products); // Add products to the model for Thymeleaf rendering
         model.addAttribute("title", "Product");
         model.addAttribute("pageTitle", "Product Page");
-        return "product"; // This will return product.html
+        return "get_product"; // This will return product.html
+    }
+     
+    @GetMapping("/add-products")
+    public String getAddProductPage(Model model) {
+        model.addAttribute("title", "Add Product");
+        model.addAttribute("pageTitle", "Add New Product");
+        return "add_product"; // Renders add_product.html for adding a new product
     }
 
      // Get a single product by ID
