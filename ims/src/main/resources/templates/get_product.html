@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${pageTitle}"></title>
+    <title th:text="${pageTitle}">Product Management</title>
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
     <link th:href="@{/libs/fullcalendar/dist/fullcalendar.min.css}" rel="stylesheet" />
     <link th:href="@{/extra-libs/calendar/calendar.css}" rel="stylesheet" />
@@ -24,7 +24,7 @@
             <!-- Success alert -->
             <div id="success-alert" class="alert alert-success alert-dismissible fade" role="alert"
                  style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-                <span id="success-alert-message">A simple success alert—check it out!</span>
+                <span id="success-alert-message">Product deleted successfully!</span>
             </div>
 
             <!-- Product Table -->
@@ -53,6 +53,27 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="delete-confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this product?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div th:replace="footer :: footer"></div>
 </div>
 
@@ -60,9 +81,38 @@
 <th:block th:replace="script :: script"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/product-list.js}"></script> <!-- Add this file to handle specific JS logic for this page -->
+
 <script>
     $(document).ready(function () {
+        let selectedProductId = null;
+        let categoriesMap = {}; // Object to store category ID-name pairs
+
+        // Show success alert
+        function showSuccessAlert(message) {
+            $('#success-alert-message').text(message);
+            $('#success-alert').addClass('show');
+            setTimeout(() => {
+                $('#success-alert').removeClass('show');
+            }, 3000);
+        }
+
+        // Fetch categories and map them by ID
+        function fetchCategories() {
+            return $.ajax({
+                url: '/get-category',
+                type: 'GET',
+                success: function (data) {
+                    categoriesMap = {};
+                    data.forEach(category => {
+                        categoriesMap[category.c_id] = category.c_name;
+                    });
+                },
+                error: function () {
+                    alert('Error fetching categories.');
+                }
+            });
+        }
+
         // Fetch and display products in the table
         function fetchProducts() {
             $.ajax({
@@ -73,22 +123,25 @@
                     productTableBody.empty();
                     response.forEach(product => {
                         const quantityBadge = product.quantity < 50
-                            ? '<span class="badge badge-warning">Low</span>'
-                            : '<span class="badge badge-info">High</span>';
+                            ? '<span class="badge badge-warning" style="background-color: orange;">Low</span>'
+                            : '<span class="badge badge-info" style="background-color: green;">High</span>';
 
-                        const row = `<tr>
-                            <td>${product.p_id}</td>
-                            <td>${product.p_name}</td>
-                            <td>${product.price}</td>
-                            <td>${product.quantity}</td>
-                            <td>${quantityBadge}</td>
-                            <td><img src="data:image/jpeg;base64,${product.image}" width="50" height="50" alt="Product Image"></td>
-                            <td>${product.category_name}</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm edit-product" data-id="${product.p_id}">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-product" data-id="${product.p_id}">Delete</button>
-                            </td>
-                        </tr>`;
+
+                        const categoryName = categoriesMap[product.category] || 'Unknown Category';
+
+                        const row = `
+                            <tr>
+                                <td>${product.p_id}</td>
+                                <td>${product.p_name}</td>
+                                <td>${product.price}</td>
+                                <td>${product.quantity}</td>
+                                <td>${quantityBadge}</td>
+                                <td><img src="data:image/jpeg;base64,${product.image}" width="50" height="50" alt="Product Image"></td>
+                                <td>${categoryName}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm delete-product" data-id="${product.p_id}">Delete</button>
+                                </td>
+                            </tr>`;
                         productTableBody.append(row);
                     });
                 },
@@ -98,19 +151,25 @@
             });
         }
 
-        // Call fetchProducts on page load
-        fetchProducts();
-        
-        // Deleting a product
+        // Initial load of categories and products
+        fetchCategories().done(fetchProducts);
+
+        // Handle delete product button click
         $(document).on('click', '.delete-product', function () {
-            const productId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this product?')) {
+            selectedProductId = $(this).data('id');
+            $('#delete-confirmation-modal').modal('show');
+        });
+
+        // Confirm delete button click
+        $('#confirm-delete-btn').on('click', function () {
+            if (selectedProductId) {
                 $.ajax({
-                    url: `/products/delete/${productId}`,
+                    url: `/products/delete/${selectedProductId}`,
                     type: 'DELETE',
                     success: function () {
-                        alert('Product deleted successfully.');
+                        $('#delete-confirmation-modal').modal('hide');
                         fetchProducts();
+                        showSuccessAlert('Product deleted successfully!');
                     },
                     error: function () {
                         alert('Error deleting product.');
@@ -118,9 +177,14 @@
                 });
             }
         });
+
+        // Remove lingering backdrops and modal-open class after hiding the modal
+        $('#delete-confirmation-modal').on('hidden.bs.modal', function () {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+        });
     });
 </script>
+
 </body>
 </html>
-
-

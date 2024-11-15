@@ -9,6 +9,21 @@
     <link th:href="@{/libs/fullcalendar/dist/fullcalendar.min.css}" rel="stylesheet" />
     <link th:href="@{/extra-libs/calendar/calendar.css}" rel="stylesheet" />
     <link th:href="@{/css/style.min.css}" rel="stylesheet">
+    <style>
+        .notification-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
 
@@ -16,6 +31,10 @@
      data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
 
     <div th:replace="header :: header"></div>
+
+    <div class="notification-box" id="notification-box">
+        Product added successfully!
+    </div>
 
     <div class="page-wrapper">
         <div class="container-fluid">
@@ -56,9 +75,18 @@
  <th:block th:replace="script :: script"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/product-add.js}"></script> <!-- Add this file to handle any specific JS logic for this page -->
+
 <script>
     $(document).ready(function () {
+        // Show notification box
+        function showNotification() {
+            const notificationBox = $('#notification-box');
+            notificationBox.fadeIn();
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => notificationBox.fadeOut(), 3000);
+        }
+
         // Populate categories dropdown
         function populateCategories() {
             $.ajax({
@@ -81,9 +109,17 @@
         populateCategories();
 
         // Submit form to save product
-        $('#add-product-form').on('submit', function (event) {
+        $('form').on('submit', function (event) {
             event.preventDefault();
+
             const formData = new FormData(this);
+            const productData = {
+                p_name: $('#product-name').val(),
+                price: $('#price').val(),
+                quantity: $('#quantity').val(),
+                category: $('#category-id').val()
+            };
+            formData.append('product', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
 
             $.ajax({
                 url: '/products/save',
@@ -92,8 +128,8 @@
                 processData: false,
                 contentType: false,
                 success: function () {
-                    alert('Product added successfully!');
-                    $('#add-product-form')[0].reset();
+                    showNotification(); // Show notification box
+                    $('form')[0].reset(); // Reset form after successful submission
                 },
                 error: function () {
                     alert('Error adding product.');
@@ -104,6 +140,3 @@
 </script>
 </body>
 </html>
-
-
-

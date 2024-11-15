@@ -60,6 +60,7 @@ public class ProductController {
 
     // Save a new product
     @PostMapping("/save")
+    @ResponseBody
     public ResponseEntity<Product> saveProduct(
             @RequestPart("product") Product product, 
             @RequestPart(value = "image", required = false) MultipartFile imageFile) {
