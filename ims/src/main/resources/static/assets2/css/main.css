@@ -470,7 +470,7 @@ body {
     }
 
     .chat-header {
-      background: #28a745;
+      background: #1acc8d;
       color: white;
       padding: 10px;
       text-align: center;
@@ -494,7 +494,7 @@ body {
     }
 
     .message.bot {
-      background: #28a745;
+      background: #1acc8d;
       color: white;
       align-self: flex-start;
     }
@@ -521,7 +521,7 @@ body {
     }
 
     #sendButton {
-      background: #28a745;
+      background: #1acc8d;
       color: white;
       border: none;
       padding: 8px 16px;
@@ -530,11 +530,11 @@ body {
     }
 
     #sendButton:hover {
-      background: #218838;
+      background: #1acc8d;
     }
 
     .message-icon {
-      background-color: #28a745;
+      background-color: #1acc8d;
       margin-right: 40px;
       color: white;
       width: 50px;
@@ -549,7 +549,7 @@ body {
     }
 
     .message-icon:hover {
-      background-color: #218838;
+      background-color: #1acc8d;
     }
 
 /*--------------------------------------------------------------
