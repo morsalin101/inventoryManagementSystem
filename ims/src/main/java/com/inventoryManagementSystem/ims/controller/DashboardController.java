@@ -12,9 +12,16 @@ import org.springframework.ui.Model;
 public class DashboardController {
 
     @GetMapping("/")
-    public void rootRedirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/login");
+    public String landingPage(Model model) {
+        model.addAttribute("title", "Landing Page");
+        model.addAttribute("pageTitle", "Welcome to Inventory Management System");
+        return "landing";
     }
+
+    // @GetMapping("/login")
+    // public void rootRedirect(HttpServletResponse response) throws IOException {
+    //     response.sendRedirect("/login");
+    // }
 
 
     @GetMapping("/dashboard")
