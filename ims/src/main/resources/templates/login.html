@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,12 +13,13 @@
 
     <!-- Bootstrap CSS for Modal -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-    
+
     <!-- jQuery -->
     <script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
     <!-- Bootstrap JS for Modal -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
+
 <body>
     <div class="main-wrapper">
         <!-- Preloader -->
@@ -31,10 +33,11 @@
         <!-- Login Box -->
         <div class="auth-wrapper d-flex justify-content-center align-items-center bg-dark" style="min-height: 100vh;">
             <div class="auth-box bg-dark border-top border-secondary p-4">
-                <span id="redirectingMessage" class="text-success" style="display: none; margin-left: 75px;">Login successfully...</span>
+                <span id="redirectingMessage" class="text-success" style="display: none; margin-left: 75px;">Login
+                    successfully...</span>
                 <div id="loginform">
                     <div class="text-center pt-3 pb-3">
-            
+
                         <span class="db"><img th:src="@{/images/logo.png}" alt="logo" /></span>
                     </div>
                     <!-- Form -->
@@ -43,98 +46,107 @@
                             <div class="col-12">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="ti-email"></i></span>
+                                        <span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i
+                                                class="ti-email"></i></span>
                                     </div>
-                                    <input type="email" id="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" required="">
+                                    <input type="email" id="email" class="form-control form-control-lg"
+                                        placeholder="Email" aria-label="Email" aria-describedby="basic-addon1"
+                                        required="">
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="ti-pencil"></i></span>
+                                        <span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i
+                                                class="ti-pencil"></i></span>
                                     </div>
-                                    <input type="password" id="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required="">
+                                    <input type="password" id="password" class="form-control form-control-lg"
+                                        placeholder="Password" aria-label="Password" aria-describedby="basic-addon1"
+                                        required="">
                                 </div>
                             </div>
                         </div>
                         <div class="row border-top border-secondary"></div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <div class="pt-3">
-                                        <button class="btn btn-info" id="to-recover" type="button"><i class="fa fa-lock me-1"></i> Lost password?</button>
-                                        <button class="btn btn-success float-end text-white" id="loginBtn" type="submit">Login</button>
-                                    </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="pt-3">
+                                    <button class="btn btn-info" id="to-recover" type="button"><i
+                                            class="fa fa-lock me-1"></i> Lost password?</button>
+                                    <button class="btn btn-success float-end text-white" id="loginBtn"
+                                        type="submit">Login</button>
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+    </div>
 
     <script>
-    $(document).ready(function() {
-        $(".preloader").fadeOut();
+        $(document).ready(function () {
+            $(".preloader").fadeOut();
 
-        // Frontend validation and AJAX request on login button click
-        $('#loginBtn').click(function() {
-            var email = $('#email').val().trim();
-            var password = $('#password').val().trim();
+            // Frontend validation and AJAX request on login button click
+            $('#loginBtn').click(function () {
+                var email = $('#email').val().trim();
+                var password = $('#password').val().trim();
 
-            // Simple frontend validation
-            if (!validateEmail(email)) {
-                alert("Please enter a valid email address.");
-                return;
-            }
-
-            if (password === "") {
-                alert("Please enter a valid password.");
-                return;
-            }
-
-            // Preparing data as JSON
-            var loginData = {
-                "email": email,
-                "password": password
-            };
-
-            // jQuery AJAX request
-            $.ajax({
-                url: 'login',  // Adjust the URL as needed
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(loginData),
-                success: function(response) {
-                    if (response.status === 'success') {
-                        // Show redirecting message on success
-                        $('#redirectingMessage').show();
-
-                        // Redirect after 3 seconds
-                        setTimeout(function() {
-                            window.location.href = '/dashboard';  // Redirect to the dashboard
-                        }, 3000);
-                    } else {
-                        alert(response.message);  // Show error message
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("Error during login. Please try again. " + xhr.responseJSON.message);
+                // Simple frontend validation
+                if (!validateEmail(email)) {
+                    alert("Please enter a valid email address.");
+                    return;
                 }
+
+                if (password === "") {
+                    alert("Please enter a valid password.");
+                    return;
+                }
+
+                // Preparing data as JSON
+                var loginData = {
+                    "email": email,
+                    "password": password
+                };
+
+                // jQuery AJAX request
+                $.ajax({
+                    url: 'login',  // Adjust the URL as needed
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(loginData),
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            // Show redirecting message on success
+                            $('#redirectingMessage').show();
+
+                            // Redirect after 3 seconds
+                            setTimeout(function () {
+                                window.location.href = '/dashboard';  // Redirect to the dashboard
+                            }, 3000);
+                        } else {
+                            alert(response.message);  // Show error message
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error during login. Please try again. " + xhr.responseJSON.message);
+                    }
+                });
+            });
+
+            // Simple email validation function
+            function validateEmail(email) {
+                var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Show password recovery form if needed
+            $('#to-recover').on("click", function () {
+                // Implement your password recovery logic here
+                alert("Password recovery feature not implemented yet.");
             });
         });
-
-        // Simple email validation function
-        function validateEmail(email) {
-            var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // Show password recovery form if needed
-        $('#to-recover').on("click", function() {
-            // Implement your password recovery logic here
-            alert("Password recovery feature not implemented yet.");
-        });
-    });
     </script>
 
 </body>
+
 </html>
