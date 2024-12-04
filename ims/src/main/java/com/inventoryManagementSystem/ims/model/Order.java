@@ -25,7 +25,9 @@ public class Order {
     private String product_name;
     private String phone;
     private Integer quantity;
-    private Double total_price = 0.0;
+    @Column(name = "total_price")
+    private Double totalPrice = 0.0;
+
     private LocalDate order_date = LocalDate.now();
     private String status = "Pending";
 }

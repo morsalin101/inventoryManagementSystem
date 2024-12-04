@@ -57,5 +57,29 @@ public class OrderService {
         return orderRepository.findAllByOrderId(orderId);
     }
     
+    public long countUniqueOrders() {
+        return orderRepository.countUniqueOrders();
+    }
+
+    // Count unique paid orders
+    public long countUniquePaidOrders() {
+        return orderRepository.countUniqueOrdersByStatus("Paid");
+    }
+
+    // Count unique pending orders
+    public long countUniquePendingOrders() {
+        return orderRepository.countUniqueOrdersByStatus("Pending");
+    }
     
+     // Calculate total paid amount
+     public double calculateTotalPaid() {
+        Double totalPaid = orderRepository.calculateTotalPaid();
+        return totalPaid != null ? totalPaid : 0.0;
+    }
+
+    // Calculate total unpaid amount
+    public double calculateTotalUnpaid() {
+        Double totalUnpaid = orderRepository.calculateTotalUnpaid();
+        return totalUnpaid != null ? totalUnpaid : 0.0;
+    }
 }

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="@{pageTitle}"></title>
+    <title th:text="@{title}"></title>
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
     <link th:href="@{/libs/fullcalendar/dist/fullcalendar.min.css}" rel="stylesheet" />
     <link th:href="@{/extra-libs/calendar/calendar.css}" rel="stylesheet" />
@@ -45,8 +45,9 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card card-hover">
                         <div class="box bg-cyan text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i></h1>
-                            <h6 class="text-white">Dashboard</h6>
+                            <h1 class="text-white">Users</h1>
+                            <!-- Display totalCustomers dynamically -->
+                            <h2 class="text-white" th:text="${totalUsers}">0</h2>
                         </div>
                     </div>
                 </div>
@@ -54,66 +55,70 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card card-hover">
                         <div class="box bg-success text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-chart-areaspline"></i></h1>
-                            <h6 class="text-white">Users</h6>
+                            <h1 class="text-white">Unpaid Money</h1>
+                            <h2 class="text-white" th:text="${totalUnpaid}">0</h2>
                         </div>
                     </div>
                 </div>
                 <!-- Column -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-warning text-center">
-                            <!-- <h1 class="font-light text-white"><i class="mdi mdi-collage"></i></h1> -->
-                            <h1 class="text-white">Users</h1>
-                            <h2 class="text-white">12</h2>
+                
+                    <!-- Total Customers -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card card-hover">
+                            <div class="box bg-warning text-center">
+                                <h1 class="text-white">Customers</h1>
+                                <!-- Display totalCustomers dynamically -->
+                                <h2 class="text-white" th:text="${totalCustomers}">0</h2>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Column -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-danger text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-border-outside"></i></h1>
-                            <h6 class="text-white">Tables</h6>
+                    <!-- Total Categories -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card card-hover">
+                            <div class="box bg-danger text-center">
+                                <h1 class="text-white">Categories</h1>
+                                <!-- Display totalCategories dynamically -->
+                                <h2 class="text-white" th:text="${totalCategories}">0</h2>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                
+                
              
             <div class="row">
                 <!-- Column -->
                 <div class="col-md-6 col-lg-3">
                     <div class="card card-hover">
-                        <div class="box bg-cyan text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i></h1>
-                            <h6 class="text-white">Dashboard</h6>
+                        <div class="box bg-primary text-center">
+                            <h1 class="text-white">Total Orders</h1>
+                            <h2 class="text-white" th:text="${totalUniqueOrders}">0</h2>
                         </div>
                     </div>
                 </div>
-                <!-- Column -->
+                <!-- Unique Paid Orders -->
                 <div class="col-md-6 col-lg-3">
                     <div class="card card-hover">
                         <div class="box bg-success text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-chart-areaspline"></i></h1>
-                            <h6 class="text-white">Charts</h6>
+                            <h1 class="text-white">Paid Orders</h1>
+                            <h2 class="text-white" th:text="${uniquePaidOrders}">0</h2>
                         </div>
                     </div>
                 </div>
-                <!-- Column -->
+                <!-- Unique Pending Orders -->
                 <div class="col-md-6 col-lg-3">
                     <div class="card card-hover">
                         <div class="box bg-warning text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-collage"></i></h1>
-                            <h6 class="text-white">Widgets</h6>
+                            <h1 class="text-white">Pending Orders</h1>
+                            <h2 class="text-white" th:text="${uniquePendingOrders}">0</h2>
                         </div>
                     </div>
                 </div>
                 <!-- Column -->
                 <div class="col-md-6 col-lg-3">
                     <div class="card card-hover">
-                        <div class="box bg-danger text-center">
-                            <h1 class="font-light text-white"><i class="mdi mdi-border-outside"></i></h1>
-                            <h6 class="text-white">Tables</h6>
+                        <div class="box bg-primary text-center">
+                            <h1 class="text-white">Paid Money</h1>
+                            <h2 class="text-white" th:text="${totalPaid}">0</h2>
                         </div>
                     </div>
                 </div>

@@ -14,17 +14,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import com.inventoryManagementSystem.ims.service.CustomerService;
+import com.inventoryManagementSystem.ims.service.CategoryService;
+import com.inventoryManagementSystem.ims.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.inventoryManagementSystem.ims.service.OrderService;
 
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 
 @Controller
 public class DashboardController {
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
+
 
     @GetMapping("/")
     public String landingPage(Model model) {
@@ -33,28 +51,48 @@ public class DashboardController {
         return "landing";
     }
 
-    // @GetMapping("/login")
-    // public void rootRedirect(HttpServletResponse response) throws IOException {
-    //     response.sendRedirect("/login");
-    // }
 
 
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, HttpServletResponse response,Model model) throws IOException {
+    public String dashboard(HttpSession session, HttpServletResponse response, Model model) throws IOException {
+        // Add page title
         model.addAttribute("title", "Dashboard");
         model.addAttribute("pageTitle", "Dashboard");
+
         // Check if user exists in the session
         User user = (User) session.getAttribute("user");
-        
-        
-        if (user != null) {
-            // User exists, return the dashboard view
-            return "dashboard";
-        } else {
-            // User not logged in, redirect to the login page
+        if (user == null) {
+            // Redirect to login if user not logged in
             response.sendRedirect("/login");
-            return null;  // Explicitly return null since response is already handled
+            return null;
         }
+
+        // Fetch counts
+        long totalCustomers = customerService.countCustomers();
+        long totalCategories = categoryService.countCategories();
+        long totalUsers = userService.countUsers();
+         // Fetch unique order counts
+       // Fetch unique order counts
+       long totalUniqueOrders = orderService.countUniqueOrders();
+       long uniquePaidOrders = orderService.countUniquePaidOrders();
+       long uniquePendingOrders = orderService.countUniquePendingOrders();
+
+       // Fetch total paid and unpaid amounts
+       double totalPaid = orderService.calculateTotalPaid();
+       double totalUnpaid = orderService.calculateTotalUnpaid();
+
+       // Add unique counts and totals to the model
+       model.addAttribute("totalUniqueOrders", totalUniqueOrders);
+       model.addAttribute("uniquePaidOrders", uniquePaidOrders);
+       model.addAttribute("uniquePendingOrders", uniquePendingOrders);
+       model.addAttribute("totalPaid", totalPaid);
+       model.addAttribute("totalUnpaid", totalUnpaid);
+        // Add counts to the model
+        model.addAttribute("totalCustomers", totalCustomers);
+        model.addAttribute("totalCategories", totalCategories);
+        model.addAttribute("totalUsers", totalUsers);
+
+        return "dashboard";  // Return the dashboard view
     }
 
     @PostMapping("/query")

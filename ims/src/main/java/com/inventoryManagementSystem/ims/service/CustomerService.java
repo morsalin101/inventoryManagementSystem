@@ -48,4 +48,7 @@ public class CustomerService {
             return true;
         }).orElse(false);
     }
+    public long countCustomers() {
+        return customerRepository.count();
+    }
 }

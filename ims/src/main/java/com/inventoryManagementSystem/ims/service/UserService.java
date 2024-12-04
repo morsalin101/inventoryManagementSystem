@@ -21,4 +21,8 @@ public class UserService {
         }
         return Optional.empty();
     }
+
+    public long countUsers() {
+        return userRepository.count();
+    }
 }
