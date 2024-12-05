@@ -24,7 +24,6 @@
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
                         <h4 class="page-title" th:text="${pageTitle}">Order Management</h4>
-                        <!-- Button to trigger modal -->
                         <div class="ms-auto">
                             <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#add-new-order">
@@ -36,6 +35,7 @@
             </div>
 
             <div class="container-fluid">
+                <!-- Notification Bar -->
                 <div id="success-alert" class="alert alert-success alert-dismissible fade" role="alert"
                     style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
                     <span id="success-alert-message">A simple success alert—check it out!</span>
@@ -91,12 +91,6 @@
                                             <label class="control-label">Product Name</label>
                                             <select class="form-control form-white" name="product-name">
                                                 <option value="">Select product</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label class="control-label">Category</label>
-                                            <select class="form-control form-white" name="category">
-                                                <option value="">Select category</option>
                                             </select>
                                         </div>
                                         <div class="col-md-12">
@@ -159,19 +153,16 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Load categories and products when the modal is opened
-            $('#add-new-order').on('show.bs.modal', function () {
-                loadCategories();
-                loadProducts();
-                loadCustomers(); // Load customers
-            });
+            // Notification Bar
+            function showSuccessAlert(message) {
+                $('#success-alert-message').text(message);
+                $('#success-alert').addClass('show');
+                setTimeout(function () {
+                    $('#success-alert').removeClass('show');
+                }, 3000);
+            }
 
-            // Clear modal fields whenever the modal is hidden (closed)
-            $('#add-new-order').on('hidden.bs.modal', function () {
-                clearModalFields();
-            });
-
-            // Function to clear modal fields
+            // Clear modal fields
             function clearModalFields() {
                 $('select[name="customer"]').val('');
                 $('select[name="product-name"]').val('');
@@ -180,7 +171,7 @@
                 $('input[name="order-date"]').val('');
             }
 
-            // Load customers from the server
+            // Load customers
             function loadCustomers() {
                 $.ajax({
                     url: '/customers/get-customers',
@@ -197,23 +188,7 @@
                 });
             }
 
-            // Load categories from the server
-            function loadCategories() {
-                $.ajax({
-                    url: '/get-category',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (categories) {
-                        let categorySelect = $('select[name="category"]');
-                        categorySelect.empty();
-                        categories.forEach(category => {
-                            categorySelect.append(`<option value="${category.c_id}">${category.c_name}</option>`);
-                        });
-                    }
-                });
-            }
-
-            // Load products from the server
+            // Load products
             function loadProducts() {
                 $.ajax({
                     url: '/products/get',
@@ -229,7 +204,35 @@
                 });
             }
 
-            // Add a new order
+            // Fetch orders
+            function fetchOrders() {
+                $.ajax({
+                    url: '/orders/get',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (orders) {
+                        let tableBody = $('#order-table-body');
+                        tableBody.empty();
+                        orders.forEach(order => {
+                            tableBody.append(`
+                                <tr data-id="${order.o_id}">
+                                    <td>${order.o_id}</td>
+                                    <td>${order.customer_name}</td>
+                                    <td>${order.product_name}</td>
+                                    <td>${order.phone}</td>
+                                    <td>${order.quantity}</td>
+                                    <td>${order.order_date}</td>
+                                    <td>
+                                        <button class="btn btn-danger delete-order" data-id="${order.o_id}">Delete</button>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                    }
+                });
+            }
+
+            // Add order
             $('.save-order').click(function () {
                 const orderData = {
                     customer_name: $('select[name="customer"] option:selected').text(),
@@ -244,125 +247,38 @@
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(orderData),
-                    success: function (response) {
+                    success: function () {
                         $('#add-new-order').modal('hide');
-                        showAlert('Order added successfully!', 'success');
-                        fetchOrders();  // Refresh the order table
-                        clearModalFields(); // Clear modal fields after adding order
-                    }
-                });
-            });
-
-            // Fetch and display all orders
-            function fetchOrders() {
-                $.ajax({
-                    url: '/orders/get',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (orders) {
-                        let tableBody = $('#order-table-body');
-                        tableBody.empty();
-                        orders.forEach(order => {
-                            tableBody.append(`
-                            <tr data-id="${order.o_id}">
-                                <td>${order.o_id}</td>
-                                <td>${order.customer_name}</td>
-                                <td>${order.product_name}</td>
-                                <td>${order.phone}</td>
-                                <td>${order.quantity}</td>
-                                <td>${order.order_date}</td>
-                                <td>
-                                    <button class="btn btn-info edit-order" data-id="${order.o_id}">Edit</button>
-                                    <button class="btn btn-danger delete-order" data-id="${order.o_id}">Delete</button>
-                                </td>
-                            </tr>
-                        `);
-                        });
-                    }
-                });
-            }
-
-            // Show success or error alert
-            function showAlert(message, type) {
-                $('#success-alert-message').text(message);
-                $('#success-alert').addClass('alert-' + type).addClass('show');
-                setTimeout(function () {
-                    $('#success-alert').removeClass('show');
-                }, 3000);
-            }
-
-            // Update an order
-            $(document).on('click', '.edit-order', function () {
-                const orderId = $(this).data('id');
-
-                // Fetch order data and populate the modal for editing
-                $.ajax({
-                    url: `/orders/${orderId}`,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (order) {
-                        $('input[name="customer-name"]').val(order.customer_name);
-                        $('select[name="product-name"]').val(order.product_name);
-                        $('input[name="phone"]').val(order.phone);
-                        $('input[name="quantity"]').val(order.quantity);
-                        $('input[name="order-date"]').val(order.order_date);
-
-                        // Show the modal and update the Save button to act as an update button
-                        $('#add-new-order').modal('show');
-                        $('.save-order').off('click').click(function () {
-                            updateOrder(orderId);
-                        });
-                    }
-                });
-            });
-
-            // Update order function
-            function updateOrder(orderId) {
-                const orderData = {
-                    customer_name: $('select[name="customer"] option:selected').text(),
-                    product_name: $('select[name="product-name"] option:selected').text(),
-                    phone: $('input[name="phone"]').val(),
-                    quantity: $('input[name="quantity"]').val(),
-                    order_date: $('input[name="order-date"]').val(),
-                };
-
-                $.ajax({
-                    url: `/orders/update/${orderId}`,
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(orderData),
-                    success: function (response) {
-                        $('#add-new-order').modal('hide');
-                        showAlert('Order updated successfully!', 'success');
+                        showSuccessAlert('Order added successfully!');
                         fetchOrders();
-                        clearModalFields(); // Clear modal fields after updating order
+                        clearModalFields();
                     }
                 });
-            }
+            });
 
-            // Delete an order
+            // Delete order
             $(document).on('click', '.delete-order', function () {
                 const orderId = $(this).data('id');
-                $('#delete-confirmation-modal').modal('show');
-
                 $('#confirm-delete-btn').off('click').click(function () {
                     $.ajax({
                         url: `/orders/delete/${orderId}`,
                         type: 'DELETE',
-                        success: function (response) {
+                        success: function () {
                             $('#delete-confirmation-modal').modal('hide');
-                            showAlert('Order deleted successfully!', 'danger');
+                            showSuccessAlert('Order deleted successfully!');
                             fetchOrders();
                         }
                     });
                 });
+                $('#delete-confirmation-modal').modal('show');
             });
 
-            // Initially fetch and display all orders
+            // Initial load
             fetchOrders();
+            $('#add-new-order').on('show.bs.modal', loadCustomers);
+            $('#add-new-order').on('show.bs.modal', loadProducts);
         });
     </script>
-
 </body>
 
 </html>

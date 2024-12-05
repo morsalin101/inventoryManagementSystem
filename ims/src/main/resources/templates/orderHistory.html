@@ -27,6 +27,12 @@
             </div>
 
             <div class="container-fluid">
+                <!-- Notification Bar -->
+                <div id="success-alert" class="alert alert-success alert-dismissible fade" role="alert"
+                    style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+                    <span id="success-alert-message">A simple success alert—check it out!</span>
+                </div>
+
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-0">Order Table</h5>
@@ -57,6 +63,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+            // Notification Bar
+            function showSuccessAlert(message) {
+                $('#success-alert-message').text(message);
+                $('#success-alert').addClass('show');
+                setTimeout(function () {
+                    $('#success-alert').removeClass('show');
+                }, 3000); // Hide after 3 seconds
+            }
+
             // Fetch orders using AJAX
             $.ajax({
                 url: "/get-orders",
@@ -72,7 +87,7 @@
 
                         // Action button for marking as "Paid"
                         let actionButton = order.status === "Pending"
-                            ? `<button class="badge bg-warning text-dark paid-btn" data-order-id="${order.orderId}" style="border: none; font-weight: bold;">click here to Paid</button>`
+                            ? `<button class="badge bg-warning text-dark paid-btn" data-order-id="${order.orderId}" style="border: none; font-weight: bold;">Click here to Paid</button>`
                             : '';
 
                         // Row for each order
@@ -94,15 +109,6 @@
                         orderTableBody.append(row);
                     });
 
-                   // Updated Invoice Button Click Event in `orderHistory.html`
-                   // Invoice Button Click Event in `orderHistory.html`
-                    $(".invoice-btn").on("click", function () {
-                        const orderId = $(this).data("order-id");
-                        window.open(`/invoice/${orderId}`, '_blank'); // Open the invoice as a Thymeleaf view
-                    });
-
-
-
                     // Handle the "Paid" button click
                     $(".paid-btn").on("click", function () {
                         let orderId = $(this).data("order-id");
@@ -110,7 +116,7 @@
                             url: `/update-order-status/${orderId}`,
                             method: "POST",
                             success: function () {
-                                alert("Order status updated to Paid!");
+                                showSuccessAlert("Order status updated to Paid!"); // Show success alert
                                 location.reload(); // Reload the page to see the updated status
                             },
                             error: function (err) {
@@ -129,7 +135,7 @@
                                 url: `/delete-order/${orderId}`,
                                 method: "POST",
                                 success: function (response) {
-                                    alert(response); // Display success message
+                                    showSuccessAlert("Order deleted successfully!"); // Show success alert
                                     location.reload(); // Reload the page to see updated list
                                 },
                                 error: function (err) {
@@ -138,6 +144,12 @@
                                 }
                             });
                         }
+                    });
+
+                    // Invoice Button Click Event
+                    $(".invoice-btn").on("click", function () {
+                        const orderId = $(this).data("order-id");
+                        window.open(`/invoice/${orderId}`, '_blank'); // Open the invoice as a Thymeleaf view
                     });
                 },
                 error: function (err) {
