@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,202 +11,539 @@
     <link th:href="@{/extra-libs/calendar/calendar.css}" rel="stylesheet" />
     <link th:href="@{/css/style.min.css}" rel="stylesheet">
 </head>
+
 <body>
 
     <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
-    data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
-   
+        data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
 
-    <div th:replace="header :: header"></div>
 
-  
-    <div class="page-wrapper">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="page-breadcrumb">
-            <div class="row">
-                <div class="col-12 d-flex no-block align-items-center">
-                    <h4 class="page-title" th:text="${pageTitle}"></h4>
+        <div th:replace="header :: header"></div>
+
+
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title" th:text="${pageTitle}"></h4>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
-        <div class="container-fluid">
             <!-- ============================================================== -->
-            <!-- Start Page Content -->
+            <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
-            <div class="row">
-                <!-- Column -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-cyan text-center">
-                            <h1 class="text-white">Users</h1>
-                            <!-- Display totalCustomers dynamically -->
-                            <h2 class="text-white" th:text="${totalUsers}">0</h2>
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- Column -->
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card outer-card text-center card-hover">
+                            <div class="card-body inner-card2">
+                                <h5 class="text-white fs-3">Users</h5>
+                                <h2 class="text-white" th:text="${totalUsers}">0</h2>
+                            </div>
                         </div>
+                        <style>
+                            /* Outer Card (background and shadow) */
+                            .outer-card {
+                                border-radius: 20px;
+                                /* Rounded corners for outer card */
+                                background-color: #28a745;
+                                /* Primary orange color */
+                                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                /* Subtle outer shadow for depth */
+                                padding: 20px;
+                                box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                /* Space for inner card */
+                            }
+
+
+                            /* Title styling */
+                            .inner-card h5 {
+                                font-size: 18px;
+                                /* Title size */
+                                margin: 0;
+                                /* Remove default margins */
+                                font-weight: 600;
+                                /* Slightly bold text */
+                            }
+
+                            /* Dynamic value styling */
+                            .inner-card h2 {
+                                font-size: 24px;
+                                /* Value size */
+                                font-weight: bold;
+                                /* Emphasize value */
+                                margin-top: 10px;
+                                /* Add spacing below the title */
+                            }
+
+                            /* Center text */
+                            .text-center {
+                                text-align: center;
+                            }
+                        </style>
+
                     </div>
-                </div>
-                <!-- Column -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-success text-center">
-                            <h1 class="text-white">Unpaid Money</h1>
-                            <h2 class="text-white" th:text="${totalUnpaid}">0</h2>
+                    <!-- Column -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card outer-card2 text-center card-hover">
+                            <div class="card-body inner-card2">
+                                <h5 class="text-white fs-3">Unpaid Money</h5>
+                                <h2 class="text-white" th:text="${totalUnpaid}">0</h2>
+                            </div>
                         </div>
+                        <style>
+                            /* Outer Card (background and shadow) */
+                            .outer-card2 {
+                                border-radius: 20px;
+                                /* Rounded corners for outer card */
+                                background-color: #ffa937;
+                                /* Primary orange color */
+                                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                /* Subtle outer shadow for depth */
+                                padding: 20px;
+                                box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                /* Space for inner card */
+                            }
+
+
+                            /* Title styling */
+                            .inner-card h5 {
+                                font-size: 18px;
+                                /* Title size */
+                                margin: 0;
+                                /* Remove default margins */
+                                font-weight: 600;
+                                /* Slightly bold text */
+                            }
+
+                            /* Dynamic value styling */
+                            .inner-card h2 {
+                                font-size: 24px;
+                                /* Value size */
+                                font-weight: bold;
+                                /* Emphasize value */
+                                margin-top: 10px;
+                                /* Add spacing below the title */
+                            }
+
+                            /* Center text */
+                            .text-center {
+                                text-align: center;
+                            }
+                        </style>
+
                     </div>
-                </div>
-                <!-- Column -->
-                
+
+                    <!-- Column -->
+
                     <!-- Total Customers -->
                     <div class="col-md-6 col-lg-3">
-                        <div class="card card-hover">
-                            <div class="box bg-warning text-center">
-                                <h1 class="text-white">Customers</h1>
-                                <!-- Display totalCustomers dynamically -->
+                        <div class="card outer-card3 text-center card-hover">
+                            <div class="card-body inner-card3">
+                                <h5 class="text-white fs-3">Customers</h5>
                                 <h2 class="text-white" th:text="${totalCustomers}">0</h2>
                             </div>
                         </div>
+                        <style>
+                            /* Outer Card (background and shadow) */
+                            .outer-card3 {
+                                border-radius: 20px;
+                                /* Rounded corners for outer card */
+                                background-color: #f57f36;
+                                /* Primary red color */
+                                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                /* Subtle outer shadow for depth */
+                                padding: 20px;
+                                box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                /* Space for inner card */
+                            }
+
+
+                            /* Title styling */
+                            .inner-card h5 {
+                                font-size: 18px;
+                                /* Title size */
+                                margin: 0;
+                                /* Remove default margins */
+                                font-weight: 600;
+                                /* Slightly bold text */
+                            }
+
+                            /* Dynamic value styling */
+                            .inner-card h2 {
+                                font-size: 24px;
+                                /* Value size */
+                                font-weight: bold;
+                                /* Emphasize value */
+                                margin-top: 10px;
+                                /* Add spacing below the title */
+                            }
+
+                            /* Center text */
+                            .text-center {
+                                text-align: center;
+                            }
+                        </style>
+
                     </div>
+
                     <!-- Total Categories -->
                     <div class="col-md-6 col-lg-3">
-                        <div class="card card-hover">
-                            <div class="box bg-danger text-center">
-                                <h1 class="text-white">Categories</h1>
-                                <!-- Display totalCategories dynamically -->
+                        <div class="card outer-card4 text-center card-hover">
+                            <div class="card-body inner-card4">
+                                <h5 class="text-white fs-3">Categories</h5>
                                 <h2 class="text-white" th:text="${totalCategories}">0</h2>
                             </div>
                         </div>
-                    </div>
-                
-                
-             
-            <div class="row">
-                <!-- Column -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-primary text-center">
-                            <h1 class="text-white">Total Orders</h1>
-                            <h2 class="text-white" th:text="${totalUniqueOrders}">0</h2>
-                        </div>
-                    </div>
-                </div>
-                <!-- Unique Paid Orders -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-success text-center">
-                            <h1 class="text-white">Paid Orders</h1>
-                            <h2 class="text-white" th:text="${uniquePaidOrders}">0</h2>
-                        </div>
-                    </div>
-                </div>
-                <!-- Unique Pending Orders -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-warning text-center">
-                            <h1 class="text-white">Pending Orders</h1>
-                            <h2 class="text-white" th:text="${uniquePendingOrders}">0</h2>
-                        </div>
-                    </div>
-                </div>
-                <!-- Column -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="card card-hover">
-                        <div class="box bg-primary text-center">
-                            <h1 class="text-white">Paid Money</h1>
-                            <h2 class="text-white" th:text="${totalPaid}">0</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
-            <div class="row">
-               
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Line Chart</h5>
-                            <div class="bars" style="height: 400px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <style>
+                            /* Outer Card (background and shadow) */
+                            .outer-card4 {
+                                border-radius: 20px;
+                                /* Rounded corners for outer card */
+                                background-color: #f79831;
+                                /* Primary red color */
+                                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                /* Subtle outer shadow for depth */
+                                padding: 20px;
+                                box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                /* Space for inner card */
+                            }
 
 
-               <!-- BEGIN MODAL -->
-               <div class="modal none-border" id="my-event">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add Event</strong></h4>
-                            <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary waves-effect"
-                                data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success save-event waves-effect waves-light">Create
-                                event</button>
-                            <button type="button" class="btn btn-danger delete-event waves-effect waves-light"
-                                data-dismiss="modal">Delete</button>
-                        </div>
+
+                            /* Title styling */
+                            .inner-card h5 {
+                                font-size: 18px;
+                                /* Title size */
+                                margin: 0;
+                                /* Remove default margins */
+                                font-weight: 600;
+                                /* Slightly bold text */
+                            }
+
+                            /* Dynamic value styling */
+                            .inner-card h2 {
+                                font-size: 24px;
+                                /* Value size */
+                                font-weight: bold;
+                                /* Emphasize value */
+                                margin-top: 10px;
+                                /* Add spacing below the title */
+                            }
+
+                            /* Center text */
+                            .text-center {
+                                text-align: center;
+                            }
+                        </style>
+
                     </div>
-                </div>
-            </div>
-            <!-- Modal Add Category -->
-            <div class="modal fade none-border" id="add-new-event">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add</strong> a category</h4>
-                            <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label">Category Name</label>
-                                        <input class="form-control form-white" placeholder="Enter name" type="text"
-                                            name="category-name" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="control-label">Choose Category Color</label>
-                                        <select class="form-select shadow-none form-white" data-placeholder="Choose a color..."
-                                            name="category-color">
-                                            <option value="success">Success</option>
-                                            <option value="danger">Danger</option>
-                                            <option value="info">Info</option>
-                                            <option value="primary">Primary</option>
-                                            <option value="warning">Warning</option>
-                                            <option value="inverse">Inverse</option>
-                                        </select>
-                                    </div>
+
+
+                    <div class="row">
+                        <!-- Column -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card outer-card5 text-center card-hover">
+                                <div class="card-body inner-card5">
+                                    <h5 class="text-white fs-3">Total Orders</h5>
+                                    <h2 class="text-white" th:text="${totalUniqueOrders}">0</h2>
                                 </div>
-                            </form>
+                            </div>
+                            <style>
+                                /* Outer Card (background and shadow) */
+                                .outer-card5 {
+                                    border-radius: 20px;
+                                    /* Rounded corners for outer card */
+                                    background-color: #8b50fa;
+                                    /* Primary red color */
+                                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                    /* Subtle outer shadow for depth */
+                                    padding: 20px;
+                                    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                    /* Space for inner card */
+                                }
+
+
+                                /* Title styling */
+                                .inner-card h5 {
+                                    font-size: 18px;
+                                    /* Title size */
+                                    margin: 0;
+                                    /* Remove default margins */
+                                    font-weight: 600;
+                                    /* Slightly bold text */
+                                }
+
+                                /* Dynamic value styling */
+                                .inner-card h2 {
+                                    font-size: 24px;
+                                    /* Value size */
+                                    font-weight: bold;
+                                    /* Emphasize value */
+                                    margin-top: 10px;
+                                    /* Add spacing below the title */
+                                }
+
+                                /* Center text */
+                                .text-center {
+                                    text-align: center;
+                                }
+                            </style>
+
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger waves-effect waves-light save-category"
-                                data-dismiss="modal">Save</button>
-                            <button type="button" class="btn btn-secondary waves-effect"
-                                data-dismiss="modal">Close</button>
+
+                        <!-- Unique Paid Orders -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card outer-card6 text-center card-hover">
+                                <div class="card-body inner-card6">
+                                    <h5 class="text-white fs-3">Paid Orders</h5>
+                                    <h2 class="text-white" th:text="${uniquePaidOrders}">0</h2>
+                                </div>
+                            </div>
+                            <style>
+                                /* Outer Card (background and shadow) */
+                                .outer-card6 {
+                                    border-radius: 20px;
+                                    /* Rounded corners for outer card */
+                                    background-color: #48aef7;
+                                    /* Primary red color */
+                                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                    /* Subtle outer shadow for depth */
+                                    padding: 20px;
+                                    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                    /* Space for inner card */
+                                }
+
+
+                                /* Title styling */
+                                .inner-card h5 {
+                                    font-size: 18px;
+                                    /* Title size */
+                                    margin: 0;
+                                    /* Remove default margins */
+                                    font-weight: 600;
+                                    /* Slightly bold text */
+                                }
+
+                                /* Dynamic value styling */
+                                .inner-card h2 {
+                                    font-size: 24px;
+                                    /* Value size */
+                                    font-weight: bold;
+                                    /* Emphasize value */
+                                    margin-top: 10px;
+                                    /* Add spacing below the title */
+                                }
+
+                                /* Center text */
+                                .text-center {
+                                    text-align: center;
+                                }
+                            </style>
+
+                        </div>
+
+                        <!-- Unique Pending Orders -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card outer-card7 text-center card-hover">
+                                <div class="card-body inner-card7">
+                                    <h5 class="text-white fs-3">Pending Orders</h5>
+                                    <h2 class="text-white" th:text="${uniquePendingOrders}">0</h2>
+                                </div>
+                            </div>
+                            <style>
+                                /* Outer Card (background and shadow) */
+                                .outer-card7 {
+                                    border-radius: 20px;
+                                    /* Rounded corners for outer card */
+                                    background-color: #7963f7;
+                                    /* Primary red color */
+                                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                    /* Subtle outer shadow for depth */
+                                    padding: 20px;
+                                    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                    /* Space for inner card */
+                                }
+
+
+
+                                /* Title styling */
+                                .inner-card h5 {
+                                    font-size: 18px;
+                                    /* Title size */
+                                    margin: 0;
+                                    /* Remove default margins */
+                                    font-weight: 600;
+                                    /* Slightly bold text */
+                                }
+
+                                /* Dynamic value styling */
+                                .inner-card h2 {
+                                    font-size: 24px;
+                                    /* Value size */
+                                    font-weight: bold;
+                                    /* Emphasize value */
+                                    margin-top: 10px;
+                                    /* Add spacing below the title */
+                                }
+
+                                /* Center text */
+                                .text-center {
+                                    text-align: center;
+                                }
+                            </style>
+
+                        </div>
+
+                        <!-- Column -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card outer-card8 text-center card-hover">
+                                <div class="card-body inner-card8">
+                                    <h5 class="text-white fs-3">Paid Money</h5>
+                                    <h2 class="text-white" th:text="${totalPaid}">0</h2>
+                                </div>
+                            </div>
+                            <style>
+                                /* Outer Card (background and shadow) */
+                                .outer-card8 {
+                                    border-radius: 20px;
+                                    /* Rounded corners for outer card */
+                                    background-color: #3dd4a9;
+                                    /* Primary red color */
+                                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                                    /* Subtle outer shadow for depth */
+                                    padding: 20px;
+                                    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+                                    /* Space for inner card */
+                                }
+
+
+
+                                /* Title styling */
+                                .inner-card h5 {
+                                    font-size: 18px;
+                                    /* Title size */
+                                    margin: 0;
+                                    /* Remove default margins */
+                                    font-weight: 600;
+                                    /* Slightly bold text */
+                                }
+
+                                /* Dynamic value styling */
+                                .inner-card h2 {
+                                    font-size: 24px;
+                                    /* Value size */
+                                    font-weight: bold;
+                                    /* Emphasize value */
+                                    margin-top: 10px;
+                                    /* Add spacing below the title */
+                                }
+
+                                /* Center text */
+                                .text-center {
+                                    text-align: center;
+                                }
+                            </style>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Line Chart</h5>
+                                    <div class="bars" style="height: 400px;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
+                    <!-- BEGIN MODAL -->
+                    <div class="modal none-border" id="my-event">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Add Event</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
+                                </div>
+                                <div class="modal-body"></div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary waves-effect"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button"
+                                        class="btn btn-success save-event waves-effect waves-light">Create
+                                        event</button>
+                                    <button type="button" class="btn btn-danger delete-event waves-effect waves-light"
+                                        data-dismiss="modal">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Add Category -->
+                    <div class="modal fade none-border" id="add-new-event">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Add</strong> a category</h4>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="control-label">Category Name</label>
+                                                <input class="form-control form-white" placeholder="Enter name"
+                                                    type="text" name="category-name" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label">Choose Category Color</label>
+                                                <select class="form-select shadow-none form-white"
+                                                    data-placeholder="Choose a color..." name="category-color">
+                                                    <option value="success">Success</option>
+                                                    <option value="danger">Danger</option>
+                                                    <option value="info">Info</option>
+                                                    <option value="primary">Primary</option>
+                                                    <option value="warning">Warning</option>
+                                                    <option value="inverse">Inverse</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger waves-effect waves-light save-category"
+                                        data-dismiss="modal">Save</button>
+                                    <button type="button" class="btn btn-secondary waves-effect"
+                                        data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+                <div th:replace="footer :: footer"></div>
             </div>
 
         </div>
-        <div th:replace="footer :: footer"></div>
-    </div>
 
-    </div>
-
-    <div th:replace="script::script"></div>
+        <div th:replace="script::script"></div>
 </body>
+
 </html>

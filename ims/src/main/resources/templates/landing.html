@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - Bootslander Bootstrap Template</title>
+  <title>Musketeers Inventory</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -50,35 +50,17 @@
       <a href="index.html" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">Bootslander</h1>
+        <h1 class="sitename">Musketeers Inventory</h1>
       </a>
 
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
+          <li><a href="#team">Team</a></li>
           <li><a href="#features">Features</a></li>
           <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#team">Team</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i
-                    class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li>
+          <li><a href="#video">Promo Video</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -734,6 +716,72 @@
 
     </section><!-- /Gallery Section -->
 
+    <section id="video" class="video section">
+      <div class="promo-video-section" data-aos="fade-up" data-aos-delay="200">
+        <div class="container text-center">
+          <h2 class="section-title">Our Promo Video</h2>
+          <p class="section-description">Watch our latest promo video to learn more about our services and offerings.
+          </p>
+          <div class="video-container">
+            <iframe width="100%" height="450" src="https://www.youtube.com/embed/3j2Y3hcOX38"
+              title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .promo-video-section {
+          padding: 50px 20px;
+          background-color: #f9f9f9;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+          font-size: 28px;
+          /* Adjust font size as needed */
+          font-weight: 700;
+          /* Bold font */
+          color: #333;
+          /* Adjust color as needed */
+          text-transform: uppercase;
+          /* Keep text in uppercase */
+          margin-bottom: 0px;
+          /* Reduce the gap below the title */
+        }
+
+        .section-description {
+          font-size: 16px;
+          /* Adjust font size as needed */
+          color: #666;
+          /* Adjust color for the description */
+          margin-top: 0;
+          /* Remove any top margin */
+        }
+
+
+        .video-container {
+          position: relative;
+          padding-bottom: 56.25%;
+          /* Aspect ratio 16:9 */
+          height: 0;
+          overflow: hidden;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      </style>
+    </section>
 
     <style>
       .hover-zoom {
@@ -801,8 +849,8 @@
               <i class="bi bi-telephone flex-shrink-0"></i>
               <div>
                 <h3>Call Us</h3>
-                <p>+1 5589 55488 55</p>
-                <p>+1 5589 55488 55</p>
+                <p>+8801996941971</p>
+                <p>+8801629991452</p>
               </div>
             </div><!-- End Info Item -->
 
@@ -810,7 +858,7 @@
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
                 <h3>Email Us</h3>
-                <p>TeamMusk@example.com</p>
+                <p>syedtest1450@gmail.com</p>
               </div>
             </div><!-- End Info Item -->
 
@@ -822,19 +870,23 @@
               <div class="row gy-4">
 
                 <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+                  <input type="text" name="name" class="form-control placeholder-bold" placeholder="Your Name"
+                    required="">
                 </div>
 
-                <div class="col-md-6 ">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+                <div class="col-md-6">
+                  <input type="email" class="form-control placeholder-bold" name="email" placeholder="Your Email"
+                    required="">
                 </div>
 
                 <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+                  <input type="text" class="form-control placeholder-bold" name="subject" placeholder="Subject"
+                    required="">
                 </div>
 
                 <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                  <textarea class="form-control placeholder-bold" name="message" rows="6" placeholder="Message"
+                    required=""></textarea>
                 </div>
 
                 <div class="col-md-12 text-center">
@@ -847,7 +899,33 @@
 
               </div>
             </form>
-          </div><!-- End Contact Form -->
+          </div>
+          <style>
+            /* Style for making placeholder text very dark (close to black) */
+            .placeholder-bold::placeholder {
+              color: #000;
+              /* Pure black placeholder text */
+              font-weight: 600;
+              /* Slightly bold font */
+              opacity: 1;
+              /* Ensure full visibility of placeholder */
+            }
+
+            /* Optional: Additional styling for input fields */
+            .form-control {
+              border: 1px solid #ccc;
+              border-radius: 8px;
+              padding: 10px 15px;
+              font-size: 16px;
+              transition: border-color 0.3s ease;
+            }
+
+            .form-control:focus {
+              border-color: #007bff;
+              /* Change border color on focus */
+              box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+          </style>
 
         </div>
 
@@ -863,13 +941,13 @@
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
           <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">Bootslander</span>
+            <span class="sitename">Musketeers Inventory</span>
           </a>
           <div class="footer-contact pt-3">
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
+            <p>House #000, Block C</p>
+            <p>Mirpur, Dhaka-1216</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+8801708326290</span></p>
+            <p><strong>Email:</strong> <span>syedtest1450@gmail.com</span></p>
           </div>
           <div class="social-links d-flex mt-4">
             <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -893,17 +971,19 @@
         <div class="col-lg-2 col-md-3 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
+            <li><a href="#">Inventory Tracking</a></li>
+            <li><a href="#">Stock Level Management</a></li>
+            <li><a href="#">Supplier Management</a></li>
+            <li><a href="#">Order Processing</a></li>
+            <li><a href="#">Reporting and Analytics</a></li>
           </ul>
         </div>
 
         <div class="col-lg-4 col-md-12 footer-newsletter">
           <h4>Our Newsletter</h4>
-          <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+          <p>Subscribe to our newsletter and stay updated on the latest inventory management tools, tips, and features
+            to streamline
+            your operations!</p>
           <form action="forms/newsletter.php" method="post" class="php-email-form">
             <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
             <div class="loading">Loading</div>
