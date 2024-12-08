@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,118 +26,145 @@
         }
     </style>
 </head>
+
 <body>
 
-<div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
-     data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+        data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
 
-    <div th:replace="header :: header"></div>
+        <div th:replace="header :: header"></div>
 
-    <div class="notification-box" id="notification-box">
-        Product added successfully!
-    </div>
-
-    <div class="page-wrapper">
-        <div class="container-fluid">
-            <h3 th:text="${pageTitle}"></h3>
-            
-            <form enctype="multipart/form-data" method="post" th:action="@{/products/save}">
-                <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" name="product-name" class="form-control" placeholder="Enter product name">
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="number" id="price" name="price" class="form-control" placeholder="Enter price">
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" class="form-control" placeholder="Enter quantity">
-                </div>
-                <div class="form-group">
-                    <label for="category-id">Category</label>
-                    <select id="category-id" name="category-id" class="form-control">
-                        <!-- Options to be populated via JavaScript -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="product-image">Image</label>
-                    <input type="file" id="product-image" name="product-image" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-primary">Save Product</button>
-            </form>
+        <div class="notification-box" id="notification-box">
+            Product added successfully!
         </div>
+
+        <div class="page-wrapper">
+            <div class="container-fluid">
+                <h3 th:text="${pageTitle}"></h3>
+
+                <form enctype="multipart/form-data" method="post" th:action="@{/products/save}"
+                    style="width: calc(100% - 5px); margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+                    <h2 style="text-align: center; color: #333; font-weight: 600; margin-bottom: 20px;">Add New Product
+                    </h2>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="product-name"
+                            style="font-weight: bold; color: #555; display: block; margin-bottom: 5px;">Product
+                            Name</label>
+                        <input type="text" id="product-name" name="product-name" class="form-control"
+                            placeholder="Enter product name"
+                            style="padding: 10px; font-size: 14px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="price"
+                            style="font-weight: bold; color: #555; display: block; margin-bottom: 5px;">Price</label>
+                        <input type="number" id="price" name="price" class="form-control" placeholder="Enter price"
+                            style="padding: 10px; font-size: 14px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="quantity"
+                            style="font-weight: bold; color: #555; display: block; margin-bottom: 5px;">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" class="form-control"
+                            placeholder="Enter quantity"
+                            style="padding: 10px; font-size: 14px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="category-id"
+                            style="font-weight: bold; color: #555; display: block; margin-bottom: 5px;">Category</label>
+                        <select id="category-id" name="category-id" class="form-control"
+                            style="padding: 10px; font-size: 14px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                            <!-- Options to be populated via JavaScript -->
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="product-image"
+                            style="font-weight: bold; color: #555; display: block; margin-bottom: 5px;">Image</label>
+                        <input type="file" id="product-image" name="product-image" class="form-control"
+                            style="padding: 10px; font-size: 14px; border-radius: 6px; border: 1px solid #ccc; width: 100%;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"
+                        style="background-color: #5d9cec; color: #fff; padding: 10px 15px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: background-color 0.3s ease;">
+                        Save Product
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div th:replace="footer :: footer"></div>
     </div>
 
-    <div th:replace="footer :: footer"></div>
-</div>
+    <!-- Scripts -->
+    <th:block th:replace="script :: script"></th:block>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
-<!-- Scripts -->
- <th:block th:replace="script :: script"></th:block>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Show notification box
+            function showNotification() {
+                const notificationBox = $('#notification-box');
+                notificationBox.fadeIn();
 
-<script>
-    $(document).ready(function () {
-        // Show notification box
-        function showNotification() {
-            const notificationBox = $('#notification-box');
-            notificationBox.fadeIn();
+                // Hide the notification after 3 seconds
+                setTimeout(() => notificationBox.fadeOut(), 3000);
+            }
 
-            // Hide the notification after 3 seconds
-            setTimeout(() => notificationBox.fadeOut(), 3000);
-        }
+            // Populate categories dropdown
+            function populateCategories() {
+                $.ajax({
+                    url: '/get-category',
+                    type: 'GET',
+                    success: function (response) {
+                        const categoryDropdown = $('select[name="category-id"]');
+                        categoryDropdown.empty();
+                        response.forEach(category => {
+                            categoryDropdown.append(new Option(category.c_name, category.c_id));
+                        });
+                    },
+                    error: function () {
+                        alert('Error fetching categories.');
+                    }
+                });
+            }
 
-        // Populate categories dropdown
-        function populateCategories() {
-            $.ajax({
-                url: '/get-category',
-                type: 'GET',
-                success: function (response) {
-                    const categoryDropdown = $('select[name="category-id"]');
-                    categoryDropdown.empty();
-                    response.forEach(category => {
-                        categoryDropdown.append(new Option(category.c_name, category.c_id));
-                    });
-                },
-                error: function () {
-                    alert('Error fetching categories.');
-                }
-            });
-        }
+            // Call function to populate categories on page load
+            populateCategories();
 
-        // Call function to populate categories on page load
-        populateCategories();
+            // Submit form to save product
+            $('form').on('submit', function (event) {
+                event.preventDefault();
 
-        // Submit form to save product
-        $('form').on('submit', function (event) {
-            event.preventDefault();
+                const formData = new FormData(this);
+                const productData = {
+                    p_name: $('#product-name').val(),
+                    price: $('#price').val(),
+                    quantity: $('#quantity').val(),
+                    category: $('#category-id').val()
+                };
+                formData.append('product', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
 
-            const formData = new FormData(this);
-            const productData = {
-                p_name: $('#product-name').val(),
-                price: $('#price').val(),
-                quantity: $('#quantity').val(),
-                category: $('#category-id').val()
-            };
-            formData.append('product', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
-
-            $.ajax({
-                url: '/products/save',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function () {
-                    showNotification(); // Show notification box
-                    $('form')[0].reset(); // Reset form after successful submission
-                },
-                error: function () {
-                    alert('Error adding product.');
-                }
+                $.ajax({
+                    url: '/products/save',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        showNotification(); // Show notification box
+                        $('form')[0].reset(); // Reset form after successful submission
+                    },
+                    error: function () {
+                        alert('Error adding product.');
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>
