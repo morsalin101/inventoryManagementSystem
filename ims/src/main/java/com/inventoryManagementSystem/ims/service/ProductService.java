@@ -26,11 +26,20 @@ public class ProductService {
 
     // Save Product with Image as byte[] (no file system storage)
     public Product saveProduct(Product product, MultipartFile imageFile) throws IOException {
+        // Check if the image file is provided and not empty
         if (imageFile != null && !imageFile.isEmpty()) {
-            product.setImage(imageFile.getBytes()); // Save image as byte array in DB
+            try {
+                product.setImage(imageFile.getBytes()); // Convert the image to byte array
+            } catch (IOException e) {
+                // Log the exception (if using a logger) and rethrow it for handling in the controller
+                throw new IOException("Failed to process the image file", e);
+            }
         }
+    
+        // Save the product to the repository
         return productRepository.save(product);
     }
+    
 
     // Update Product with optional Image replacement
     public Product updateProduct(Long id, Product updatedProduct, MultipartFile imageFile) throws IOException {

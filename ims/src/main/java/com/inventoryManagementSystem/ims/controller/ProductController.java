@@ -60,19 +60,36 @@ public class ProductController {
 
     // Save a new product
     @PostMapping("/save")
-    @ResponseBody
-    public ResponseEntity<Product> saveProduct(
-            @RequestPart("product") Product product, 
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+    public String saveProduct(
+            @RequestParam("p_name") String name,
+            @RequestParam("price") Double price,
+            @RequestParam("quantity") Integer quantity,
+            @RequestParam("category-id") Long categoryId,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
         try {
+            // Create and populate the Product object
+            Product product = new Product();
+            product.setP_name(name);
+            product.setPrice(price);
+            product.setQuantity(quantity);
+            product.setCategory(String.valueOf(categoryId)); // Adjust if category is not a string
+    
+            // Process the image file
+            if (image != null && !image.isEmpty()) {
+                product.setImage(image.getBytes());
+            }
+    
             // Save the product
-            Product savedProduct = productService.saveProduct(product, imageFile);
-            return ResponseEntity.ok(savedProduct);
+            productService.saveProduct(product, image);
+    
+            // Redirect to the product list page after successful save
+            return "redirect:/products/all-products";
         } catch (IOException e) {
-            // Handle exceptions as necessary
-            return ResponseEntity.status(500).build();
+            e.printStackTrace();
+            return "error"; // Return an error page in case of failure
         }
     }
+    
 
     // Update an existing product by ID
     @PutMapping("/update/{id}")

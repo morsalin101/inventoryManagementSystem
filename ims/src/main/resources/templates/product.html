@@ -252,42 +252,46 @@
 
             // Save new product
             function saveProduct() {
-                var productName = $('input[name="product-name"]').val();
-                var price = $('input[name="price"]').val();
-                var quantity = $('input[name="quantity"]').val();
-                var categoryId = $('select[name="category-id"]').val();
-                var formData = new FormData();
+    var productName = $('input[name="product-name"]').val();
+    var price = $('input[name="price"]').val();
+    var quantity = $('input[name="quantity"]').val();
+    var categoryId = $('select[name="category-id"]').val();
+    var formData = new FormData();
 
-                var product = {
-                    p_name: productName,
-                    price: price,
-                    quantity: quantity,
-                    category: categoryId
-                };
+    // Create the product object
+    var product = {
+        p_name: productName,
+        price: price,
+        quantity: quantity,
+        category: categoryId
+    };
 
-                formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
-                var imageFile = $('input[name="product-image"]')[0].files[0];
-                if (imageFile) {
-                    formData.append('image', imageFile);
-                }
+    // Append product details as a JSON string
+    formData.append('product', JSON.stringify(product));
 
-                $.ajax({
-                    url: '/products/save',
-                    type: 'POST',
-                    processData: false,
-                    contentType: false,
-                    data: formData,
-                    success: function () {
-                        showAlert('Product saved successfully!');
-                        $('#add-new-event').modal('hide');
-                        fetchProducts();
-                        resetForm();
-                    },
-                    error: function () {
-                        alert('Error saving product');
-                    }
-                });
-            }
+    // Append the image file
+    var imageFile = $('input[name="product-image"]')[0].files[0];
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
+
+    // Send AJAX request
+    $.ajax({
+        url: '/products/save', // Backend save route
+        type: 'POST',
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (response) {
+            console.log('Product saved successfully:', response);
+            $('#add-new-event').modal('hide'); // Close modal
+            fetchProducts(); // Refresh product list
+        },
+        error: function (xhr) {
+            console.error('Error saving product:', xhr.responseText);
+        }
+    });
+}
 
             // Update existing product
             function updateProduct(productId) {
